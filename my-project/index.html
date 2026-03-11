@@ -1,13 +1,40 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>my-project</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SunSafe | Your UV Monitor</title>
+    <link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>☀️ SunSafe</h1>
+            <p>Real-time UV monitoring & protection guide</p>
+        </header>
+
+        <main>
+            <div class="card uvi-display">
+                <h2>Current UV Index (UVI)</h2>
+                <div id="uvi-value">--</div>
+                <p id="uvi-level">Fetching location...</p>
+            </div>
+
+            <div class="card advice-section">
+                <h3>💡 Protection Tips</h3>
+                <ul id="advice-list">
+                    <li>Please allow location access to see local data.</li>
+                </ul>
+            </div>
+
+            <div class="card reapply-timer">
+                <h3>🧴 Reapply Reminder</h3>
+                <p>SPF effectiveness drops over time.</p>
+                <div id="timer-display">120:00</div>
+                <button id="start-timer">Start Timer</button>
+            </div>
+        </main>
+    </div>
+    <script src="src/script.js"></script>
+</body>
 </html>
