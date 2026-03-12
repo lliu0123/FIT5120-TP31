@@ -2,18 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SunSafe | Your UV Monitor</title>
     <link rel="stylesheet" href="src/style.css">
 </head>
 <body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">☀️ SunSafe</div>
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#forecast" class="nav-link">Forecast</a></li>
+                <li><a href="#tips" class="nav-link">Tips</a></li>
+                <li><a href="#settings" class="nav-link">Settings</a></li>
+            </ul>
+        </div>
+    </nav>
+
     <div class="container">
         <header>
-            <h1>☀️ SunSafe</h1>
-            <p>Real-time UV monitoring & protection guide</p>
+            <h1>Real-time UV monitoring</h1>
+            <p>Stay protected with live data and smart reminders.</p>
         </header>
 
-        <main>
+        <main class="dashboard">
             <div class="card uvi-display">
                 <h2>Current UV Index (UVI)</h2>
                 <div id="uvi-value">--</div>
@@ -35,25 +47,6 @@
             </div>
         </main>
     </div>
-
-    <nav class="bottom-nav">
-        <a href="#home" class="nav-item active">
-            <span class="nav-icon">🏠</span>
-            <span class="nav-label">Home</span>
-        </a>
-        <a href="#forecast" class="nav-item">
-            <span class="nav-icon">📅</span>
-            <span class="nav-label">Forecast</span>
-        </a>
-        <a href="#tips" class="nav-item">
-            <span class="nav-icon">🛡️</span>
-            <span class="nav-label">Tips</span>
-        </a>
-        <a href="#settings" class="nav-item">
-            <span class="nav-icon">⚙️</span>
-            <span class="nav-label">Settings</span>
-        </a>
-    </nav>
 
     <script src="src/script.js"></script>
 </body>

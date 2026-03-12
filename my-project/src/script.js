@@ -1,35 +1,30 @@
-/* --- Navigation Interactivity --- */
+/* --- Web Navigation Logic --- */
 
-function initNavigation() {
-    const navItems = document.querySelectorAll('.nav-item');
+function handleNavigation() {
+    const links = document.querySelectorAll('.nav-link');
 
-    navItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            // Remove 'active' class from all navigation items
-            navItems.forEach(nav => nav.classList.remove('active'));
+    links.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Remove active class from all links
+            links.forEach(l => l.classList.remove('active'));
             
-            // Add 'active' class to the clicked item
+            // Add active class to the current link
             this.classList.add('active');
             
-            // Note: add logic here to switch views/pages
-            console.log("Navigated to:", this.querySelector('.nav-label').textContent);
+            console.log("Navigating to:", this.getAttribute('href'));
         });
     });
 }
 
-/* --- Timer Logic (Placeholder) --- */
+/* --- App Initializer --- */
+document.addEventListener('DOMContentLoaded', () => {
+    handleNavigation();
 
-function initTimer() {
+    // Example logic for the start button
     const startBtn = document.getElementById('start-timer');
     if (startBtn) {
         startBtn.addEventListener('click', () => {
-            alert('Sunscreen reapply timer started!');
+            console.log('Timer started');
         });
     }
-}
-
-/* Initialize all functions when DOM is ready */
-document.addEventListener('DOMContentLoaded', () => {
-    initNavigation();
-    initTimer();
 });
