@@ -3,51 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SunSafe | Your UV Monitor</title>
+    <title>SunSafe | Dashboard</title>
     <link rel="stylesheet" href="src/style.css">
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-content">
-            <div class="logo">☀️ SunSafe</div>
+            <div class="brand">☀️ UV Safety Assistant</div>
             <ul class="nav-links">
-                <li><a href="#home" class="nav-link active">Home</a></li>
-                <li><a href="#forecast" class="nav-link">Forecast</a></li>
-                <li><a href="#tips" class="nav-link">Tips</a></li>
-                <li><a href="#settings" class="nav-link">Settings</a></li>
+                <li><a href="index.html" class="nav-link active">Dashboard</a></li>
+                <li><a href="awareness.html" class="nav-link">UV Awareness</a></li>
+                <li><a href="tools.html" class="nav-link">Protection Tools</a></li>
+                <li><a href="profile.html" class="nav-link">Profile</a></li>
             </ul>
         </div>
     </nav>
 
     <div class="container">
-        <header>
-            <h1>Real-time UV monitoring</h1>
-            <p>Stay protected with live data and smart reminders.</p>
-        </header>
+        <div class="location-container">
+            <span class="location-badge">📍 Melbroune, VIC</span>
+        </div>
 
-        <main class="dashboard">
-            <div class="card uvi-display">
-                <h2>Current UV Index (UVI)</h2>
-                <div id="uvi-value">--</div>
-                <p id="uvi-level">Fetching location...</p>
-            </div>
+        <div class="uv-main-card">
+            <p class="uv-label">CURRENT UV INDEX</p>
+            <div class="uv-value">9</div>
+            <p class="uv-status">VERY HIGH</p>
+        </div>
 
-            <div class="card advice-section">
-                <h3>💡 Protection Tips</h3>
-                <ul id="advice-list">
-                    <li>Please allow location access to see local data.</li>
-                </ul>
+        <p class="uv-description">Very High UV - extra protection required. Avoid sun during peak hours.</p>
+        
+        <div class="risk-legend">
+            <p class="legend-title">UV Risk Levels</p>
+            <div class="risk-tags">
+                <span class="tag low">0-2 Low</span>
+                <span class="tag moderate">3-5 Moderate</span>
+                <span class="tag high">6-7 High</span>
+                <span class="tag very-high active">8-10 Very High</span>
+                <span class="tag extreme">11+ Extreme</span>
             </div>
-
-            <div class="card reapply-timer">
-                <h3>🧴 Reapply Reminder</h3>
-                <p>SPF effectiveness drops over time.</p>
-                <div id="timer-display">120:00</div>
-                <button id="start-timer">Start Timer</button>
-            </div>
-        </main>
+        </div>
     </div>
-
     <script src="src/script.js"></script>
 </body>
 </html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SunSafe | Profile Settings</title>
+    <link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="brand">
+                <span class="logo-icon">☀️</span>
+                <span class="brand-name">UV Safety Assistant</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">Dashboard</a></li>
+                <li><a href="awareness.html" class="nav-link">UV Awareness</a></li>
+                <li><a href="tools.html" class="nav-link">Protection Tools</a></li>
+                <li><a href="profile.html" class="nav-link active">Profile</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="user-meta">
+                    <h2>Personalize Your Protection</h2>
+                    <p class="location-text">Your preferences are saved locally on this device.</p>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>Select Your Skin Type</h3>
+                <p class="sub-text">This helps us provide more accurate sun protection advice tailored to your skin's sensitivity.</p>
+                
+                <div class="skin-type-grid">
+                    <div class="skin-option" data-skin="1">
+                        <div class="skin-color" style="background: #FFEDE1;"></div>
+                        <span>Type I: Very Fair</span>
+                    </div>
+                    <div class="skin-option" data-skin="2">
+                        <div class="skin-color" style="background: #F5D3B8;"></div>
+                        <span>Type II: Fair</span>
+                    </div>
+                    <div class="skin-option" data-skin="3">
+                        <div class="skin-color" style="background: #E1B382;"></div>
+                        <span>Type III: Medium</span>
+                    </div>
+                    <div class="skin-option" data-skin="4">
+                        <div class="skin-color" style="background: #A67C52;"></div>
+                        <span>Type IV: Olive</span>
+                    </div>
+                    <div class="skin-option" data-skin="5">
+                        <div class="skin-color" style="background: #623A17;"></div>
+                        <span>Type V: Dark</span>
+                    </div>
+                </div>
+
+                <div id="save-status" class="save-status">✓ Preference updated successfully!</div>
+            </div>
+
+            <div class="settings-section" style="border-top: 1px solid #f2f2f2;">
+                <h3>App Preferences</h3>
+                <div class="settings-item-static">
+                    <p><strong>Location Detection:</strong> Browser Managed</p>
+                    <p><strong>Data Storage:</strong> LocalStorage Enabled</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/script.js"></script>
+</body>
+</html>
