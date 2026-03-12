@@ -109,3 +109,102 @@ button, #start-timer {
   color: white; border: none; padding: 12px 25px;
   border-radius: 12px; font-weight: 600; cursor: pointer;
 }
+
+/* --- Awareness Hero Card --- */
+.awareness-hero {
+  background: linear-gradient(135deg, #FFF9F2 0%, #FFFFFF 100%);
+  border-radius: 30px;
+  padding: 30px;
+  display: flex;
+  gap: 20px;
+  border: 1px solid #FFE4BC;
+  margin-bottom: 30px;
+}
+
+.hero-icon-box {
+  width: 60px;
+  height: 60px;
+  background: white;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  box-shadow: 0 4px 10px rgba(255, 140, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.hero-text h2 { margin: 0 0 10px 0; font-size: 24px; color: #1d1d1f; }
+.hero-text p { margin: 0; color: #48484a; line-height: 1.6; }
+
+/* --- Chart Styles --- */
+.chart-card {
+  background: white;
+  border-radius: 30px;
+  padding: 30px;
+  border: 1px solid #eee;
+}
+
+.chart-header { display: flex; gap: 15px; margin-bottom: 40px; }
+.info-icon {
+  width: 40px; height: 40px; background: #FFF2F2; color: #FF4D4D;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+}
+
+.header-text h3 { margin: 0; font-size: 18px; }
+.header-text p { margin: 0; font-size: 13px; color: #86868b; }
+
+/* --- Chart Layout --- */
+.chart-container {
+  display: flex;
+  height: 300px; /* Increased height */
+  gap: 20px;
+  margin-top: 40px;
+  align-items: flex-end; /* Ensure bars sit at the bottom */
+}
+
+.chart-y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #aeaeae;
+  font-size: 12px;
+  text-align: right;
+  width: 50px;
+  height: 250px; /* Match bars area height */
+  padding-bottom: 25px; /* Offset for x-axis labels */
+}
+
+.chart-bars {
+  flex-grow: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 250px;
+  border-bottom: 1px dashed #eee; /* The x-axis line */
+}
+
+.bar-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+/* CRITICAL: Ensure the bar has color and width */
+.bar {
+  width: 60%; 
+  background-color: #E34F4F !important; /* Force the red color from your design */
+  border-radius: 8px 8px 0 0;
+  min-height: 5px; /* Minimum visibility */
+  transition: height 0.5s ease-out;
+}
+
+.bar-group span {
+  font-size: 12px;
+  color: #86868b;
+  margin-top: 10px;
+  white-space: nowrap;
+}
