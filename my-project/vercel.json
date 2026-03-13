@@ -1,9 +1,7 @@
 {
     "cleanUrls": true,
-    "trailingSlash": false,
     "rewrites": [
-      {
-        "handle": "filesystem"
-      }
+      { "handle": "filesystem" },
+      { "source": "/(.*)", "destination": "/index.html" }
     ]
   }
