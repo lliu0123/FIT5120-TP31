@@ -10,11 +10,12 @@
 }
 
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  background-color: var(--bg-gray);
-  color: var(--text-main);
-  padding-bottom: 50px;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-gray);
+    color: var(--text-main);
+    padding-top: 90px;
+    padding-bottom: 50px;
   /* Space for bottom content */
 }
 
