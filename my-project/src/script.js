@@ -1,4 +1,4 @@
-/**
+﻿/**
  * SunSafe - Core Logic
  * Handles skin type storage and cross-page persistence.
  */
@@ -10,7 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
         initSkinTypeManager();
     }
 
-    // 2. Global UI updates (Optional)
+    // 2. Initialize UV Button if on Dashboard
+    if (document.getElementById('getUVBtn')) {
+        initUVButton();
+    }
+
+    // 3. Global UI updates (Optional)
     applySavedPreferences();
 });
 
@@ -65,4 +70,29 @@ function applySavedPreferences() {
         // Example: Change logic for sunscreen timer or advice based on savedSkin
         console.log(`App loading with Skin Type: ${savedSkin}`);
     }
+}
+
+/**
+ * Initialize UV button functionality
+ */
+function initUVButton() {
+    const getUVBtn = document.getElementById('getUVBtn');
+
+    getUVBtn.addEventListener('click', async () => {
+        // Show loading state
+        getUVBtn.classList.add('loading');
+        getUVBtn.textContent = 'Getting Location...';
+        getUVBtn.disabled = true;
+
+        try {
+            await window.updateUV();
+        } catch (error) {
+            console.error('Error getting UV data:', error);
+        } finally {
+            // Reset button state
+            getUVBtn.classList.remove('loading');
+            getUVBtn.textContent = '📍 Get Current UV Index';
+            getUVBtn.disabled = false;
+        }
+    });
 }

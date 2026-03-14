@@ -1,38 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SunSafe | Dashboard</title>
-    <link rel="stylesheet" href="src/style.css">
+    <link rel="stylesheet" href="src/style.css" />
 </head>
-<body>
-    <div class="container">
-        <div class="location-container">
-            <span class="location-badge">📍 Melbourne, VIC</span>
-        </div>
 
-        <div class="uv-main-card">
-            <p class="uv-label">CURRENT UV INDEX</p>
-            <div class="uv-value">9</div>
-            <p class="uv-status">VERY HIGH</p>
-        </div>
+<body class="m-0 font-sans text-[#1d1d1f]">
 
-        <p class="uv-description">Very High UV - extra protection required. Avoid sun during peak hours.</p>
+    <div class="fixed inset-0 z-0 pointer-events-none bg-[url('/background.png')] bg-cover bg-center bg-no-repeat"></div>
+
+        <main class="relative z-10 max-w-[2020px] mx-auto mt-[100px] mb-10 px-5">
+
+
+            <!-- Hero Section -->
+            <section class="max-w-[1500px] w-full mx-auto mt-30 mb-16 min-h-[560px] flex items-center">
+                <div
+                    class="w-full rounded-[40px] bg-transparent px-16 py-20 text-center text-[#1d1d1f]">
+                    <h1 class="text-5xl font-bold mb-16 fade-in delay-1">
+                        Protect Your Skin Every Day
+                    </h1>
+            
+                    <p class="text-[20px] leading-9 max-w-[900px] mx-auto mb-15 text-[#1d1d1f]/85 fade-in delay-2">
+                        Learn how UV exposure affects your health and discover practical ways to stay protected under the sun.
+                    </p>
+            
+                    <a href="#location-section" class="inline-flex items-center justify-center rounded-full px-8 py-3"
+                        style="color: white; text-decoration: none; font-weight: 600; background: rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.45); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 8px 24px rgba(255,255,255,0.10); transition: all 0.3s ease;">
+                        Check UV in Your Area →
+                    </a>
+                </div>
+            </section>
+
+            <!-- Feature Cards -->
+            <section class="mt-20">
+                <div id="carousel-wrapper" class="relative max-w-[1500px] w-full h-[560px] mx-auto overflow-hidden">
+            
+                    <!-- Left Card -->
+                    <a id="card-left" href="awareness.html"
+                        class="absolute left-[90px] top-[95px] w-[500px] rounded-[36px] overflow-hidden shadow-xl z-10 transition-all duration-500 ease-in-out">
+                        <img id="img-left" src="/uv_awareness.png" alt="UV Awareness" class="w-full h-auto object-cover" />
+                    </a>
+            
+                    <!-- Middle Card -->
+                    <a id="card-center" href="calculator.html"
+                        class="absolute left-1/2 -translate-x-1/2 top-[10px] w-[700px] rounded-[40px] overflow-hidden shadow-2xl z-20 transition-all duration-500 ease-in-out">
+                        <img id="img-center" src="/calculator.png" alt="Sunscreen Calculator" class="w-full h-auto object-cover" />
+                    </a>
+            
+                    <!-- Right Card -->
+                    <a id="card-right" href="clothing_advice.html"
+                        class="absolute right-[90px] top-[95px] w-[500px] rounded-[36px] overflow-hidden shadow-xl z-10 transition-all duration-500 ease-in-out">
+                        <img id="img-right" src="/clothing_advice.png" alt="Clothing Advice" class="w-full h-auto object-cover" />
+                    </a>
+            
+                    <!-- Dots -->
+                    <div id="carousel-dots" class="absolute bottom-20 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3">
+                    
+                        <button
+                            class="dot appearance-none border border-white/60 w-3 h-3 rounded-full bg-white/40 hover:bg-white transition-all duration-300"
+                            data-index="0" aria-label="Go to slide 1"></button>
+                    
+                        <button
+                            class="dot appearance-none border border-white/60 w-3 h-3 rounded-full bg-white/40 hover:bg-white transition-all duration-300"
+                            data-index="1" aria-label="Go to slide 2"></button>
+                    
+                        <button
+                            class="dot appearance-none border border-white/60 w-3 h-3 rounded-full bg-white/40 hover:bg-white transition-all duration-300"
+                            data-index="2" aria-label="Go to slide 3"></button>
+                    
+                    </div>
+            
+                </div>
+            </section>
+
+            <section class="max-w-[1500px] w-full mx-auto mt-20" id="location-section">
+                <!-- Location -->
+                <div  class="flex justify-center mb-6">
+                    <span
+                        class="location-badge inline-flex items-center rounded-full bg-white px-4 py-2 text-sm font-medium text-[#1d1d1f] shadow-sm border border-[#eee]">
+                        📍 Melbourne, VIC
+                    </span>
+                </div>
+
+                <!-- UV Card -->
+                <div id="uvCard"
+                    class="w-[280px] h-[280px] mx-auto my-[30px] rounded-[40px] bg-[#FF4D4D] text-white text-center flex flex-col justify-center items-center shadow-[0_15px_35px_rgba(255,77,77,0.3)] transition-colors duration-300">
+                    <p class="text-sm font-medium mb-2.5">CURRENT UV INDEX</p>
+                    <div class="text-[80px] font-extrabold leading-none uv-value">9</div>
+                    <p class="text-[20px] font-bold mt-2.5 uv-status">VERY HIGH</p>
+                </div>
+
+
+                <!-- Risk Legend -->
+                <div id="riskLegend" class="mb-8">
+                    <p class="text-center font-semibold mb-4">UV Risk Levels</p>
+                    <div class="risk-tags flex justify-center gap-2 flex-wrap">
+                        <span class="tag bg-green-500 text-white px-3 py-1 rounded-full text-sm">0-2 Low</span>
+                        <span class="tag bg-yellow-300 text-[#333] px-3 py-1 rounded-full text-sm">3-5 Moderate</span>
+                        <span class="tag bg-orange-500 text-white px-3 py-1 rounded-full text-sm">6-7 High</span>
+                        <span class="tag bg-red-500 text-white px-3 py-1 rounded-full text-sm">8-10 Very High</span>
+                        <span class="tag bg-purple-600 text-white px-3 py-1 rounded-full text-sm">11+ Extreme</span>
+                    </div>
+                </div>
+
+                <!-- Button -->
+                <div class="text-center my-10">
+                    <button id="getUVBtn"
+                        class="inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold"
+                        style="color:  black; background: rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.45); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 8px 24px rgba(255,255,255,0.10); transition: all 0.3s ease;">
+                        📍 Get Current UV Index
+                    </button>
+                </div>
+            </section>
         
-        <div class="risk-legend">
-            <p class="legend-title">UV Risk Levels</p>
-            <div class="risk-tags">
-                <span class="tag low">0-2 Low</span>
-                <span class="tag moderate">3-5 Moderate</span>
-                <span class="tag high">6-7 High</span>
-                <span class="tag very-high active">8-10 Very High</span>
-                <span class="tag extreme">11+ Extreme</span>
-            </div>
-        </div>
-    </div>
+        </main>
+    
+    
 
+    <script src="src/config.js"></script>
     <script src="src/navbar.js"></script>
+    <script src="src/cards.js"></script>
+    <script src="src/uv.js"></script>
     <script src="src/script.js"></script>
 </body>
+
 </html>
