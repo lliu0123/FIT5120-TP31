@@ -8,34 +8,24 @@ import DataService from './dataService.js';
 
 /**
  * US3.1: Awareness Data Visualization (Historical Data 1982 - 2025)
- * Fetches data from DataService and renders dynamic bar charts.
  */
 const initAwarenessCharts = async () => {
     const tempBars = document.getElementById('temp-bars');
     const cancerBars = document.getElementById('cancer-bars');
     
-    // Exit if the current page is not the Awareness page
     if (!tempBars || !cancerBars) return;
 
     try {
-        // Fetch long-term environmental and health data concurrently
         const [tempData, cancerData] = await Promise.all([
             DataService.getTemperatureTrend(),
             DataService.getSkinCancerTrend()
         ]);
 
-        /**
-         * Core Rendering Engine for Bar Charts
-         */
         const drawBars = (containerId, data, key, maxVal, unit = "") => {
             const container = document.getElementById(`${containerId}-bars`);
-            // Note: yearAxis is no longer used as labels are hidden in CSS
             if (!container) return;
 
-            // Clear existing content to ensure clean re-rendering
             container.innerHTML = '';
-
-            // 1. Inject Bars with enhanced tooltips (including units)
             container.innerHTML = data.map(item => {
                 const height = (item[key] / maxVal) * 100;
                 return `
@@ -49,8 +39,6 @@ const initAwarenessCharts = async () => {
                 `;
             }).join('');
             
-            // 2. Trigger Entry Animation
-            // Small delay to ensure the DOM has painted the initial state
             setTimeout(() => {
                 const bars = container.querySelectorAll('.bar');
                 bars.forEach(bar => {
@@ -59,7 +47,6 @@ const initAwarenessCharts = async () => {
             }, 300); 
         };
 
-        // Initialize Rendering with scaling factors and units for tooltips
         drawBars('temp', tempData, 'mean_temp_anomaly', 2.0, "°C"); 
         drawBars('cancer', cancerData, 'incidence_rate', 80, " cases"); 
         
@@ -69,7 +56,7 @@ const initAwarenessCharts = async () => {
 };
 
 /**
- * US2.2: Personalized UV Protection Algorithm (Profile Page)
+ * US2.2: Personalized UV Protection Algorithm
  */
 const getPersonalizedSafety = (uvIndex, skinType) => {
     const sensitivity = { '1': 2.5, '2': 2.0, '3': 1.5, '4': 1.0, '5': 0.7 };
@@ -91,7 +78,7 @@ const getPersonalizedSafety = (uvIndex, skinType) => {
 };
 
 /**
- * Synchronize Profile UI with Global UV State
+ * Synchronize UI with Global UV State
  */
 const updateProfilePreview = () => {
     const previewTime = document.getElementById('preview-burn-time');
@@ -111,15 +98,10 @@ const updateProfilePreview = () => {
         }
     } catch (e) { console.error("Storage Sync Error:", e); }
 
-    if (currentUV === 0) {
-        const uvText = document.querySelector('.uv-meter-box .uv-value')?.textContent || "0";
-        currentUV = parseInt(uvText.replace(/[^0-9]/g, '')) || 0;
-    }
-
     const localUVMeter = document.querySelector('.uv-meter-box .uv-value');
     const localUVStatus = document.querySelector('.uv-status-badge');
 
-    if (localUVMeter && currentUV > 0) {
+    if (localUVMeter && currentUV >= 0) {
         localUVMeter.textContent = currentUV;
         if (localUVStatus) {
             let status = "Low", statusColor = "#10b981";
@@ -142,7 +124,7 @@ const updateProfilePreview = () => {
 };
 
 /**
- * Profile Selection Event Listeners
+ * Profile Selection Logic
  */
 const initProfileSelection = () => {
     const skinOptions = document.querySelectorAll('.skin-option-card');
@@ -171,21 +153,47 @@ const initProfileSelection = () => {
 };
 
 /**
+ * Global Bridge: Teammate module interceptor (Production Optimized)
+ */
+const setupUVInterceptor = () => {
+    const originalUpdateDisplay = window.updateUVDisplay;
+    
+    // We override the global function so main.js can "hear" when the API finishes
+    window.updateUVDisplay = function(uv) {
+        // 1. Run the original team logic (colors/text on Dashboard)
+        if (typeof originalUpdateDisplay === 'function') {
+            originalUpdateDisplay(uv);
+        }
+        
+        // 2. Explicitly sync to localStorage for other pages
+        localStorage.setItem("uvData", JSON.stringify({
+            uv: uv,
+            updatedAt: Date.now()
+        }));
+        
+        // 3. Update personalized calculations immediately
+        updateProfilePreview();
+        console.log("Global Sync: UV updated to", uv);
+    };
+};
+
+/**
  * Global Lifecycle Controller
  */
 document.addEventListener('DOMContentLoaded', () => {
     initProfileSelection();
     initAwarenessCharts(); 
-    setTimeout(updateProfilePreview, 500);
+    
+    // Small delay to ensure uv.js has finished loading its functions into window
+    setTimeout(() => {
+        setupUVInterceptor();
+        updateProfilePreview();
+    }, 200);
 });
 
-/**
- * Global Bridge: Teammate module interceptor
- */
-const originalUpdateDisplay = window.updateUVDisplay;
-if (typeof originalUpdateDisplay === 'function') {
-    window.updateUVDisplay = function(uv) {
-        originalUpdateDisplay(uv);
+// Cross-tab sync: Update if user changes data in another tab
+window.addEventListener('storage', (event) => {
+    if (event.key === 'uvData' || event.key === 'userSkinType') {
         updateProfilePreview();
-    };
-}
+    }
+});
