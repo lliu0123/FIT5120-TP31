@@ -308,11 +308,13 @@ body {
 .bar {
   width: 60%;
   background-color: #E34F4F !important;
-  /* Force the red color from your design */
   border-radius: 8px 8px 0 0;
-  min-height: 5px;
-  /* Minimum visibility */
-  transition: height 0.5s ease-out;
+  
+  /* 1. Initial height should be 0 */
+  height: 0; 
+  
+  /* 2. Transition must be defined here */
+  transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
 }
 
 .bar-group span {
