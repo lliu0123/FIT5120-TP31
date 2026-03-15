@@ -6,13 +6,27 @@
     <title>SunSafe | UV Awareness</title>
     <link rel="stylesheet" href="src/style.css">
 </head>
-<body>
+<body class="bg-app">
     
-    <div class="max-w-[1000px] mx-auto mt-20 mb-10 px-5">
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="brand-logo">
+                <div class="logo-dot"></div>
+                <span class="logo-text">SUNSAFE</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">Dashboard</a></li>
+                <li><a href="awareness.html" class="nav-link active">UV Awareness</a></li>
+                <li><a href="#" class="nav-link">Tools</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="max-w-[1000px] mx-auto mt-28 mb-10 px-5">
         
         <div class="awareness-hero">
             <div class="hero-icon-box">
-                <span class="icon-shield">🛡️</span>
+                <div class="custom-shield"></div>
             </div>
             <div class="hero-text">
                 <h2>UV Awareness and Skin Cancer Risk</h2>
@@ -22,7 +36,7 @@
 
         <div class="chart-card">
             <div class="chart-header">
-                <div class="info-icon">ℹ️</div>
+                <div class="info-tag">i</div>
                 <div class="header-text">
                     <h3>Skin Cancer Impact in Australia</h3>
                     <p>Reported cases by age group</p>
@@ -38,30 +52,12 @@
                     <span>0</span>
                 </div>
                 <div class="chart-bars">
-                    <div class="bar-group">
-                        <div class="bar" data-height="15%"></div>
-                        <span>18-25</span>
-                    </div>
-                    <div class="bar-group">
-                        <div class="bar" data-height="25%"></div>
-                        <span>26-35</span>
-                    </div>
-                    <div class="bar-group">
-                        <div class="bar" data-height="40%"></div>
-                        <span>36-45</span>
-                    </div>
-                    <div class="bar-group">
-                        <div class="bar" data-height="60%"></div>
-                        <span>46-55</span>
-                    </div>
-                    <div class="bar-group">
-                        <div class="bar" data-height="75%"></div>
-                        <span>56-65</span>
-                    </div>
-                    <div class="bar-group">
-                        <div class="bar" data-height="90%"></div>
-                        <span>66+</span>
-                    </div>
+                    <div class="bar-group"><div class="bar" data-height="15%"></div><span>18-25</span></div>
+                    <div class="bar-group"><div class="bar" data-height="25%"></div><span>26-35</span></div>
+                    <div class="bar-group"><div class="bar" data-height="40%"></div><span>36-45</span></div>
+                    <div class="bar-group"><div class="bar" data-height="60%"></div><span>46-55</span></div>
+                    <div class="bar-group"><div class="bar" data-height="75%"></div><span>56-65</span></div>
+                    <div class="bar-group"><div class="bar" data-height="90%"></div><span>66+</span></div>
                 </div>
             </div>
         </div>
@@ -144,31 +140,8 @@
 
             </div>
         </div>
-    </div> <script type="module" src="/src/main.js"></script>
+    </div> 
+
+    <script type="module" src="/src/main.js"></script>
 </body>
-</html><div class="chart-bars">
-    <div class="bar-group">
-        <div class="bar" data-height="15%"></div>
-        <span>18-25</span>
-    </div>
-    <div class="bar-group">
-        <div class="bar" data-height="25%"></div>
-        <span>26-35</span>
-    </div>
-    <div class="bar-group">
-        <div class="bar" data-height="40%"></div>
-        <span>36-45</span>
-    </div>
-    <div class="bar-group">
-        <div class="bar" data-height="60%"></div>
-        <span>46-55</span>
-    </div>
-    <div class="bar-group">
-        <div class="bar" data-height="75%"></div>
-        <span>56-65</span>
-    </div>
-    <div class="bar-group">
-        <div class="bar" data-height="90%"></div>
-        <span>66+</span>
-    </div>
-</div>
+</html>
