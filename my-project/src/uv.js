@@ -170,22 +170,20 @@ async function updateUV() {
           const locationName = await getLocationName(lat, lng);
           document.querySelector('.location-badge').textContent = `📍 ${locationName}`;
 
-          const uvIndex = await getUVIndex(lat, lng);
+         const uvIndex = await getUVIndex(lat, lng);
 
-          saveUVDataToStorage({
-            uv: uvIndex,
-            location: locationName,
-            lat,
-            lng,
-          });
+         saveUVDataToStorage({
+           uv: uvIndex,
+           location: locationName,
+         });
 
-          updateUVDisplay(uvIndex);
-          showUVElements();
-          resolve();
-        } catch (e) {
-          console.error(e);
-          resolve();
-        }
+         updateUVDisplay(uvIndex);
+         showUVElements();
+         resolve();
+         } catch (e) {
+           console.error(e);
+           resolve();
+         }
       },
       () => {
         document.querySelector('.location-badge').textContent = '📍 Melbourne, VIC';
@@ -202,25 +200,58 @@ async function updateUV() {
     );
   });
 }
-function saveUVDataToStorage({ uv, location, lat = null, lng = null }) {
+
+function saveUVDataToStorage({ uv, location }) {
+  localStorage.setItem(
+    "uvData",
+    JSON.stringify({
+      uv,
+      location,
+      updatedAt: Date.now(),
+    })
+  );
+}
+
+
+function getStoredUVData() {
   try {
-    localStorage.setItem(
-      'uvData',
-      JSON.stringify({
-        uv,
-        location,
-        lat,
-        lng,
-        updatedAt: Date.now(),
-      })
-    );
-  } catch (error) {
-    console.error('Failed to save UV data:', error);
+    const raw = localStorage.getItem("uvData");
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw);
+
+    if (typeof parsed.uv !== "number") return null;
+
+    return parsed;
+  } catch {
+    return null;
   }
 }
+
+
+function restoreStoredUVData() {
+  const stored = getStoredUVData();
+  if (!stored) return;
+
+  updateUVDisplay(stored.uv);
+
+  const badge = document.querySelector(".location-badge");
+  if (badge && stored.location) {
+    badge.textContent = `📍 ${stored.location}`;
+  }
+
+  showUVElements();
+}
+
+
 // Export for global usage
 window.updateUV = updateUV;
 window.updateUVDisplay = updateUVDisplay;
 window.showUVElements = showUVElements;
 window.showUVError = showUVError;
 window.getUVIndex = getUVIndex;
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  restoreStoredUVData();
+});

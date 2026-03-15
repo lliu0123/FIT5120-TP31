@@ -128,9 +128,7 @@
   <script type="module" src="/src/main.js"></script>
 
   <script>
-    /* ------------------------------
-       1. Read UV data from homepage
-    --------------------------------*/
+    //1. Read UV data from homepage
 
     function getStoredUVData() {
       try {
@@ -147,9 +145,8 @@
     const locationName = storedUVData?.location ?? "Melbourne, VIC";
 
 
-    /* ------------------------------
-       2. UV CARD DISPLAY
-    --------------------------------*/
+    //2. UV CARD DISPLAY
+    
 
     const uvValueEl = document.getElementById("uvValue");
     const uvStatusEl = document.getElementById("uvStatus");
@@ -239,9 +236,7 @@
 
 
 
-    /* ------------------------------
-       3. DOSAGE CALCULATOR
-    --------------------------------*/
+    //3. DOSAGE CALCULATOR
 
     const coverageAreaEl = document.getElementById("coverageArea");
     const exposureTimeEl = document.getElementById("exposureTime");
@@ -337,9 +332,8 @@
 
 
 
-    /* ------------------------------
-       4. REAPPLY REMINDER TIMER
-    --------------------------------*/
+    //4. REAPPLY REMINDER TIMER
+
 
     const setReminderBtn = document.getElementById("setReminderBtn");
     const reminderStatus = document.getElementById("reminderStatus");
