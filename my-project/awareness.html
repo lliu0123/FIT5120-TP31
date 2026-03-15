@@ -24,28 +24,36 @@
             </div>
         </section>
 
-        <section class="chart-card awareness-content-card fade-in delay-1">
-            <div class="chart-header">
-                <div class="info-tag">i</div>
-                <div class="header-text">
-                    <h3>Skin Cancer Impact in Australia</h3>
-                    <p>Reported cases by age group</p>
+        <section class="dual-chart-section fade-in delay-1">
+            
+            <div class="chart-card awareness-content-card">
+                <div class="chart-header">
+                    <div class="info-tag" style="background: #ff6b6b;">C</div>
+                    <div class="header-text">
+                        <h3>Australia Temperature Trend</h3>
+                        <p>Mean temperature anomaly (1982 - 2025)</p>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-bars" id="temp-bars"></div>
+                    <div class="chart-x-axis" id="temp-years"></div>
                 </div>
             </div>
 
-            <div class="chart-container">
-                <div class="chart-y-axis">
-                    <span>34000</span><span>25500</span><span>17000</span><span>8500</span><span>0</span>
+            <div class="chart-card awareness-content-card">
+                <div class="chart-header">
+                    <div class="info-tag" style="background: #FF8C00;">!</div>
+                    <div class="header-text">
+                        <h3>Melanoma Incidence Rate</h3>
+                        <p>Cases per 100k Australians (1982 - 2025)</p>
+                    </div>
                 </div>
-                <div class="chart-bars">
-                    <div class="bar-group"><div class="bar" style="height: 15%"></div><span>18-25</span></div>
-                    <div class="bar-group"><div class="bar" style="height: 25%"></div><span>26-35</span></div>
-                    <div class="bar-group"><div class="bar" style="height: 40%"></div><span>36-45</span></div>
-                    <div class="bar-group"><div class="bar" style="height: 60%"></div><span>46-55</span></div>
-                    <div class="bar-group"><div class="bar" style="height: 75%"></div><span>56-65</span></div>
-                    <div class="bar-group"><div class="bar" style="height: 90%"></div><span>66+</span></div>
+                <div class="chart-container">
+                    <div class="chart-bars" id="cancer-bars"></div>
+                    <div class="chart-x-axis" id="cancer-years"></div>
                 </div>
             </div>
+
         </section>
 
         <section class="myths-section fade-in delay-2">

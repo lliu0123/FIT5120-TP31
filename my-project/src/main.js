@@ -1,11 +1,75 @@
 // src/main.js
 import './style.css'
 import './profile.css'
+import './awarenessBG.css' 
 import './navbar.js'
-import './uv.js' // Team module
+import './uv.js' 
+import DataService from './dataService.js'; 
 
 /**
- * US2.2: Core Calculation Logic
+ * US3.1: Awareness Data Visualization (Historical Data 1982 - 2025)
+ * Fetches data from DataService and renders dynamic bar charts.
+ */
+const initAwarenessCharts = async () => {
+    const tempBars = document.getElementById('temp-bars');
+    const cancerBars = document.getElementById('cancer-bars');
+    
+    // Exit if the current page is not the Awareness page
+    if (!tempBars || !cancerBars) return;
+
+    try {
+        // Fetch long-term environmental and health data concurrently
+        const [tempData, cancerData] = await Promise.all([
+            DataService.getTemperatureTrend(),
+            DataService.getSkinCancerTrend()
+        ]);
+
+        /**
+         * Core Rendering Engine for Bar Charts
+         */
+        const drawBars = (containerId, data, key, maxVal, unit = "") => {
+            const container = document.getElementById(`${containerId}-bars`);
+            // Note: yearAxis is no longer used as labels are hidden in CSS
+            if (!container) return;
+
+            // Clear existing content to ensure clean re-rendering
+            container.innerHTML = '';
+
+            // 1. Inject Bars with enhanced tooltips (including units)
+            container.innerHTML = data.map(item => {
+                const height = (item[key] / maxVal) * 100;
+                return `
+                    <div class="bar-group">
+                        <div class="bar" 
+                             style="height: 0%" 
+                             data-h="${Math.max(height, 2)}%" 
+                             data-value="${item.year}: ${item[key]}${unit}">
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // 2. Trigger Entry Animation
+            // Small delay to ensure the DOM has painted the initial state
+            setTimeout(() => {
+                const bars = container.querySelectorAll('.bar');
+                bars.forEach(bar => {
+                    bar.style.height = bar.getAttribute('data-h');
+                });
+            }, 300); 
+        };
+
+        // Initialize Rendering with scaling factors and units for tooltips
+        drawBars('temp', tempData, 'mean_temp_anomaly', 2.0, "°C"); 
+        drawBars('cancer', cancerData, 'incidence_rate', 80, " cases"); 
+        
+    } catch (error) {
+        console.error("Critical Error: Failed to load historical awareness data.", error);
+    }
+};
+
+/**
+ * US2.2: Personalized UV Protection Algorithm (Profile Page)
  */
 const getPersonalizedSafety = (uvIndex, skinType) => {
     const sensitivity = { '1': 2.5, '2': 2.0, '3': 1.5, '4': 1.0, '5': 0.7 };
@@ -26,69 +90,59 @@ const getPersonalizedSafety = (uvIndex, skinType) => {
     };
 };
 
+/**
+ * Synchronize Profile UI with Global UV State
+ */
 const updateProfilePreview = () => {
-  const previewTime = document.getElementById('preview-burn-time');
-  const previewSPF = document.getElementById('rec-spf-preview');
-  const progressFill = document.querySelector('.progress-fill');
-  
-  if (!previewTime) return; // Not on profile page
+    const previewTime = document.getElementById('preview-burn-time');
+    const previewSPF = document.getElementById('rec-spf-preview');
+    const progressFill = document.querySelector('.progress-fill');
+    
+    if (!previewTime) return;
 
-  // 1. Get Skin Type
-  const userSkin = localStorage.getItem('userSkinType') || '3';
-  
-  // 2. Get UV from Team's specific storage structure 'uvData'
-  let currentUV = 0;
-  try {
-      const rawData = localStorage.getItem("uvData");
-      if (rawData) {
-          const parsed = JSON.parse(rawData);
-          currentUV = parsed.uv || 0;
-      }
-  } catch (e) {
-      console.error("Failed to parse team uvData", e);
-  }
+    const userSkin = localStorage.getItem('userSkinType') || '3';
+    let currentUV = 0;
 
-  // Fallback if storage is empty
-  if (currentUV === 0) {
-      const uvText = document.querySelector('.uv-meter-box .uv-value')?.textContent || "0";
-      currentUV = parseInt(uvText.replace(/[^0-9]/g, '')) || 0;
-  }
+    try {
+        const rawData = localStorage.getItem("uvData");
+        if (rawData) {
+            const parsed = JSON.parse(rawData);
+            currentUV = parsed.uv || 0;
+        }
+    } catch (e) { console.error("Storage Sync Error:", e); }
 
-  // 3. Sync the Local UV Meter (Number + Status Badge)
-  const localUVMeter = document.querySelector('.uv-meter-box .uv-value');
-  const localUVStatus = document.querySelector('.uv-status-badge');
+    if (currentUV === 0) {
+        const uvText = document.querySelector('.uv-meter-box .uv-value')?.textContent || "0";
+        currentUV = parseInt(uvText.replace(/[^0-9]/g, '')) || 0;
+    }
 
-  if (localUVMeter && currentUV > 0) {
-      localUVMeter.textContent = currentUV;
-      
-      // Update the Status Badge text and color based on UV index
-      if (localUVStatus) {
-          let status = "Low";
-          let statusColor = "#10b981"; // Green
-          
-          if (currentUV >= 11) { status = "Extreme"; statusColor = "#9333ea"; }
-          else if (currentUV >= 8) { status = "Very High"; statusColor = "#ef4444"; }
-          else if (currentUV >= 6) { status = "High"; statusColor = "#f97316"; }
-          else if (currentUV >= 3) { status = "Moderate"; statusColor = "#facc15"; }
-          
-          localUVStatus.textContent = status;
-          localUVStatus.style.color = statusColor;
-          localUVStatus.style.backgroundColor = `${statusColor}1A`; // 10% opacity
-          localUVMeter.style.color = statusColor;
-      }
-  }
+    const localUVMeter = document.querySelector('.uv-meter-box .uv-value');
+    const localUVStatus = document.querySelector('.uv-status-badge');
 
-  // 4. Run Personalized Calculation
-  const safety = getPersonalizedSafety(currentUV, userSkin);
+    if (localUVMeter && currentUV > 0) {
+        localUVMeter.textContent = currentUV;
+        if (localUVStatus) {
+            let status = "Low", statusColor = "#10b981";
+            if (currentUV >= 11) { status = "Extreme"; statusColor = "#9333ea"; }
+            else if (currentUV >= 8) { status = "Very High"; statusColor = "#ef4444"; }
+            else if (currentUV >= 6) { status = "High"; statusColor = "#f97316"; }
+            else if (currentUV >= 3) { status = "Moderate"; statusColor = "#facc15"; }
+            
+            localUVStatus.textContent = status;
+            localUVStatus.style.color = statusColor;
+            localUVStatus.style.backgroundColor = `${statusColor}1A`;
+            localUVMeter.style.color = statusColor;
+        }
+    }
 
-  // 5. Render calculations
-  previewTime.textContent = safety.timeText;
-  if (previewSPF) previewSPF.textContent = safety.spf;
-  if (progressFill) progressFill.style.width = `${safety.riskPercent}%`;
+    const safety = getPersonalizedSafety(currentUV, userSkin);
+    previewTime.textContent = safety.timeText;
+    if (previewSPF) previewSPF.textContent = safety.spf;
+    if (progressFill) progressFill.style.width = `${safety.riskPercent}%`;
 };
 
 /**
- * Interactions: Skin Card Selection
+ * Profile Selection Event Listeners
  */
 const initProfileSelection = () => {
     const skinOptions = document.querySelectorAll('.skin-option-card');
@@ -103,10 +157,8 @@ const initProfileSelection = () => {
         option.addEventListener('click', () => {
             const selectedType = option.getAttribute('data-skin');
             localStorage.setItem('userSkinType', selectedType);
-            
             skinOptions.forEach(opt => opt.classList.remove('selected'));
             option.classList.add('selected');
-            
             updateProfilePreview();
 
             const status = document.getElementById('save-status');
@@ -119,26 +171,21 @@ const initProfileSelection = () => {
 };
 
 /**
- * Global Lifecycle
+ * Global Lifecycle Controller
  */
 document.addEventListener('DOMContentLoaded', () => {
     initProfileSelection();
-    
-    // Initial sync
+    initAwarenessCharts(); 
     setTimeout(updateProfilePreview, 500);
 });
 
 /**
- * Intercept Team's UV Update
- * Since they exposed window.updateUVDisplay, we can hook into it.
+ * Global Bridge: Teammate module interceptor
  */
 const originalUpdateDisplay = window.updateUVDisplay;
 if (typeof originalUpdateDisplay === 'function') {
     window.updateUVDisplay = function(uv) {
-        // Execute original logic (colors, text, etc.)
         originalUpdateDisplay(uv);
-        
-        // Save to our logic's expectations and refresh profile
         updateProfilePreview();
     };
 }
