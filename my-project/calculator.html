@@ -4,28 +4,400 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SunSafe | Sunscreen Calculator</title>
-  <link rel="stylesheet" href="src/style.css" />
+  <title>UV Safety Assistant | Sunscreen Dosage Calculator</title>
 </head>
 
-<body class="m-0 font-sans text-[#1d1d1f]">
-
-  <main class="container">
-    <h1 class="text-3xl font-bold mb-4">Sunscreen & UV Calculator</h1>
-    <p class="mb-4">
-      This page is a placeholder for the sunscreen calculator.
-      You can add a skin type selector, UV-based SPF recommendation, and more here.
-    </p>
-
-    <div class="card">
-      <h2 class="text-xl font-semibold mb-3">Coming soon</h2>
-      <p>
-        We’ll build a calculator that helps you estimate sun exposure time and the
-        right sunscreen SPF based on your location and skin type.
+<body class="m-0 text-[#1d1d1f] font-sans"
+  style="
+  background-image: url('/calculator_background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;">
+  <main class="max-w-[1150px] mx-auto px-6 pt-[110px] pb-12">
+    <!-- Page Heading -->
+    <section class="text-center mb-10">
+      <h1 class="text-[52px] font-bold leading-tight mb-4">Sunscreen Dosage Calculator</h1>
+      <p class="text-[18px] text-[#6b7280] max-w-[760px] mx-auto leading-8">
+        Ensure you are applying the right amount of sunscreen to get the full SPF
+        protection listed on the bottle.
       </p>
-    </div>
+    </section>
+
+    <!-- Sun Protection Mode Banner -->
+    <section id="protectionBanner"
+      class="w-full rounded-[28px] border border-[#f1d8b5] bg-[#fff7ec] px-8 py-6 mb-10 shadow-sm">
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 rounded-full bg-[#fff3dd] flex items-center justify-center text-[26px]">
+          🛡️
+        </div>
+        <div>
+          <h2 id="protectionTitle" class="text-[22px] font-bold text-[#7a3f18]">
+            Sun Protection Mode Activated
+          </h2>
+          <p id="protectionText" class="text-[16px] text-[#9a5a2f] mt-1">
+            UV levels are high enough to require active sun protection measures.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Two-Column Layout -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch mb-10">
+      <!-- UV Card -->
+      <div id="uvCard"
+        class="rounded-[36px] min-h-[500px] flex flex-col justify-center items-center text-center px-8 shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-all duration-300 bg-[#ff4b57] text-[#240000]">
+        <p class="text-[15px] tracking-[0.28em] font-semibold uppercase mb-10">
+          Current UV Index
+        </p>
+        <div id="uvValue" class="text-[120px] font-extrabold leading-none">8</div>
+        <p id="uvStatus" class="text-[28px] font-extrabold mt-8 tracking-[0.18em] uppercase">
+          Very High
+        </p>
+      </div>
+
+      <!-- Dosage Guidance -->
+      <div class="rounded-[36px] bg-white border border-[#ececec] px-10 py-8 shadow-[0_10px_30px_rgba(0,0,0,0.04)]">
+        <div class="flex items-center gap-4 mb-8">
+          <div class="w-14 h-14 rounded-[18px] bg-[#f3f7ff] flex items-center justify-center text-[26px]">
+            💧
+          </div>
+          <h2 class="text-[24px] font-bold">Dosage Calculator</h2>
+        </div>
+      
+        <div class="space-y-5">
+          <div>
+            <label class="block text-[16px] font-semibold mb-2">Coverage Area</label>
+            <select id="coverageArea" class="w-full rounded-[16px] border border-[#e5e7eb] px-4 py-3 text-[16px]">
+              <option value="face-arms">Face & Arms</option>
+              <option value="full-body">Full Body</option>
+            </select>
+          </div>
+      
+          <div>
+            <label class="block text-[16px] font-semibold mb-2">Planned Time Outdoors</label>
+            <select id="exposureTime" class="w-full rounded-[16px] border border-[#e5e7eb] px-4 py-3 text-[16px]">
+              <option value="short">Less than 30 minutes</option>
+              <option value="medium">30–60 minutes</option>
+              <option value="long">1–2 hours</option>
+              <option value="very-long">More than 2 hours</option>
+            </select>
+          </div>
+        </div>
+      
+        <div id="calculatorResult" class="mt-6 rounded-[24px] bg-[#f7f9ff] border border-[#e9eefb] px-6 py-6">
+          <p class="text-[15px] text-[#6b7280] mb-2">Recommended Amount</p>
+          <h3 id="amountResult" class="text-[40px] font-extrabold text-[#1f4bb8] leading-none mb-3">
+            7 teaspoons
+          </h3>
+          <p id="spfResult" class="text-[18px] text-[#3152a4] mb-2">Recommended SPF: SPF 50+</p>
+          <p id="adviceResult" class="text-[16px] text-[#5b6472] leading-7">
+            Apply evenly to all exposed skin and reapply every 2 hours.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reminder Card -->
+    <section class="w-full rounded-[36px] bg-white border border-[#ececec] px-10 py-10 shadow-[0_10px_30px_rgba(0,0,0,0.04)]">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+        <div class="flex items-start gap-4">
+          <div class="w-14 h-14 rounded-[18px] bg-[#fff1f4] flex items-center justify-center text-[26px]">
+            ⏰
+          </div>
+          <div>
+            <h2 class="text-[22px] font-bold mb-2">Reapply every 2 hours</h2>
+            <p class="text-[17px] text-[#6b7280] leading-7">
+              Or immediately after swimming, heavy sweating, or towel drying.
+            </p>
+            <p id="reminderStatus" class="mt-3 text-[16px] font-semibold text-[#1f4bb8] hidden">
+              Reminder set. Countdown: <span id="countdown">02:00:00</span>
+            </p>
+          </div>
+        </div>
+
+        <button id="setReminderBtn"
+          class="inline-flex items-center justify-center gap-3 min-w-[210px] rounded-[18px] px-8 py-4 text-[18px] font-semibold text-white bg-[#0b1739] shadow-[0_10px_22px_rgba(11,23,57,0.22)] hover:-translate-y-0.5 transition duration-300">
+          ⏱️ Set Reminder
+        </button>
+      </div>
+    </section>
+
   </main>
+
   <script type="module" src="/src/main.js"></script>
+
+  <script>
+    /* ------------------------------
+       1. Read UV data from homepage
+    --------------------------------*/
+
+    function getStoredUVData() {
+      try {
+        const raw = localStorage.getItem("uvData");
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch {
+        return null;
+      }
+    }
+
+    const storedUVData = getStoredUVData();
+    const uvIndex = storedUVData?.uv ?? 8;
+    const locationName = storedUVData?.location ?? "Melbourne, VIC";
+
+
+    /* ------------------------------
+       2. UV CARD DISPLAY
+    --------------------------------*/
+
+    const uvValueEl = document.getElementById("uvValue");
+    const uvStatusEl = document.getElementById("uvStatus");
+    const uvCardEl = document.getElementById("uvCard");
+
+    const protectionTitleEl = document.getElementById("protectionTitle");
+    const protectionTextEl = document.getElementById("protectionText");
+
+    const bannerEl = document.getElementById("protectionBanner");
+
+
+    function getUvStatus(uv) {
+      if (uv <= 2) return "Low";
+      if (uv <= 5) return "Moderate";
+      if (uv <= 7) return "High";
+      if (uv <= 10) return "Very High";
+      return "Extreme";
+    }
+
+
+    function updateUvCardStyle(uv) {
+
+      if (uv <= 2) {
+        uvCardEl.style.background = "#45c173";
+        uvCardEl.style.color = "#083117";
+      }
+
+      else if (uv <= 5) {
+        uvCardEl.style.background = "#f7c948";
+        uvCardEl.style.color = "#3d2c00";
+      }
+
+      else if (uv <= 7) {
+        uvCardEl.style.background = "#ff8a3d";
+        uvCardEl.style.color = "#401700";
+      }
+
+      else if (uv <= 10) {
+        uvCardEl.style.background = "#ff4b57";
+        uvCardEl.style.color = "#240000";
+      }
+
+      else {
+        uvCardEl.style.background = "#8b5cf6";
+        uvCardEl.style.color = "#ffffff";
+      }
+
+    }
+
+
+    function renderProtectionMode(uv) {
+
+      uvValueEl.textContent = uv;
+      uvStatusEl.textContent = getUvStatus(uv);
+
+      updateUvCardStyle(uv);
+
+
+      if (uv >= 3) {
+
+        protectionTitleEl.textContent = "Sun Protection Mode Activated";
+
+        protectionTextEl.textContent =
+          `UV Index is ${uv}. Sun protection is required for ${locationName}.`;
+
+        bannerEl.style.background = "#fff7ec";
+        bannerEl.style.borderColor = "#f1d8b5";
+
+      }
+
+      else {
+
+        protectionTitleEl.textContent = "Low UV Conditions";
+
+        protectionTextEl.textContent =
+          `Current UV level is low in ${locationName}. Basic protection is sufficient.`;
+
+        bannerEl.style.background = "#f3fbf4";
+        bannerEl.style.borderColor = "#cbe7d0";
+
+      }
+
+    }
+
+
+    renderProtectionMode(uvIndex);
+
+
+
+    /* ------------------------------
+       3. DOSAGE CALCULATOR
+    --------------------------------*/
+
+    const coverageAreaEl = document.getElementById("coverageArea");
+    const exposureTimeEl = document.getElementById("exposureTime");
+
+    const amountResultEl = document.getElementById("amountResult");
+    const spfResultEl = document.getElementById("spfResult");
+    const adviceResultEl = document.getElementById("adviceResult");
+
+
+    function getRecommendedSPF(uv) {
+
+      if (uv <= 2) return "SPF 15+";
+
+      if (uv <= 5) return "SPF 30+";
+
+      if (uv <= 7) return "SPF 50";
+
+      return "SPF 50+";
+
+    }
+
+
+    function calculateDosage() {
+
+      const area = coverageAreaEl.value;
+      const exposure = exposureTimeEl.value;
+
+      let amount = "";
+      let advice = "";
+
+
+      /* dosage rule */
+
+      if (area === "face-arms") {
+        amount = "1 teaspoon";
+      }
+
+      else {
+        amount = "7 teaspoons";
+      }
+
+
+      /* UV protection logic */
+
+      if (uvIndex >= 3) {
+
+        advice =
+          "Sun Protection Mode is active. Apply sunscreen 20 minutes before going outside.";
+
+      }
+
+      else {
+
+        advice =
+          "UV is currently low, but sunscreen is still recommended for prolonged outdoor exposure.";
+
+      }
+
+
+      /* exposure time advice */
+
+      if (exposure === "long" || exposure === "very-long") {
+
+        advice += " Reapply every 2 hours.";
+
+      }
+
+      if (exposure === "very-long") {
+
+        advice += " Seek shade and wear protective clothing.";
+
+      }
+
+
+      /* update UI */
+
+      amountResultEl.textContent = amount;
+
+      spfResultEl.textContent =
+        `Recommended SPF: ${getRecommendedSPF(uvIndex)}`;
+
+      adviceResultEl.textContent = advice;
+
+    }
+
+
+    coverageAreaEl.addEventListener("change", calculateDosage);
+
+    exposureTimeEl.addEventListener("change", calculateDosage);
+
+
+    calculateDosage();
+
+
+
+    /* ------------------------------
+       4. REAPPLY REMINDER TIMER
+    --------------------------------*/
+
+    const setReminderBtn = document.getElementById("setReminderBtn");
+    const reminderStatus = document.getElementById("reminderStatus");
+    const countdownEl = document.getElementById("countdown");
+
+    let countdownInterval = null;
+    let remainingSeconds = 2 * 60 * 60; // 2 hours
+
+
+    function formatTime(totalSeconds) {
+
+      const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+
+      const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
+
+      const seconds = String(totalSeconds % 60).padStart(2, "0");
+
+      return `${hours}:${minutes}:${seconds}`;
+
+    }
+
+
+    function startCountdown() {
+
+      clearInterval(countdownInterval);
+
+      remainingSeconds = 2 * 60 * 60;
+
+      countdownEl.textContent = formatTime(remainingSeconds);
+
+      reminderStatus.classList.remove("hidden");
+
+
+      countdownInterval = setInterval(() => {
+
+        remainingSeconds--;
+
+        countdownEl.textContent = formatTime(remainingSeconds);
+
+        if (remainingSeconds <= 0) {
+
+          clearInterval(countdownInterval);
+
+          countdownEl.textContent = "00:00:00";
+
+          reminderStatus.innerHTML =
+            "Reminder time reached. Please reapply sunscreen now.";
+
+        }
+
+      }, 1000);
+
+    }
+
+
+    setReminderBtn.addEventListener("click", startCountdown);
+
+  </script>
 </body>
 
 </html>

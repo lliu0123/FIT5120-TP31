@@ -171,6 +171,14 @@ async function updateUV() {
           document.querySelector('.location-badge').textContent = `📍 ${locationName}`;
 
           const uvIndex = await getUVIndex(lat, lng);
+
+          saveUVDataToStorage({
+            uv: uvIndex,
+            location: locationName,
+            lat,
+            lng,
+          });
+
           updateUVDisplay(uvIndex);
           showUVElements();
           resolve();
@@ -181,6 +189,12 @@ async function updateUV() {
       },
       () => {
         document.querySelector('.location-badge').textContent = '📍 Melbourne, VIC';
+
+        saveUVDataToStorage({
+          uv: 9,
+          location: 'Melbourne, VIC',
+        });
+
         updateUVDisplay(9);
         showUVElements();
         resolve();
@@ -188,7 +202,22 @@ async function updateUV() {
     );
   });
 }
-
+function saveUVDataToStorage({ uv, location, lat = null, lng = null }) {
+  try {
+    localStorage.setItem(
+      'uvData',
+      JSON.stringify({
+        uv,
+        location,
+        lat,
+        lng,
+        updatedAt: Date.now(),
+      })
+    );
+  } catch (error) {
+    console.error('Failed to save UV data:', error);
+  }
+}
 // Export for global usage
 window.updateUV = updateUV;
 window.updateUVDisplay = updateUVDisplay;

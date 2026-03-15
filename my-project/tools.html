@@ -1,31 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SunSafe | Tools</title>
-    <link rel="stylesheet" href="src/style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UV Safety Assistant | Protection Tools</title>
 </head>
-<body>
-    <div class="container center-text">
-        <h2>Protection Tools</h2>
-        <p>Use our interactive tools to calculate exactly what you need.</p>
-        <div class="grid">
-            <div class="tool-item">
-                <div class="icon-box blue">🧴</div>
-                <h3>Sunscreen Calculator</h3>
-                <p>Find the exact dosage required for protection.</p>
-                <a href="#" class="link">Open Calculator →</a>
-            </div>
-            <div class="tool-item">
-                <div class="icon-box green">👕</div>
-                <h3>Clothing Advice</h3>
-                <p>Check the best protective clothing to wear.</p>
-                <a href="#" class="link green-txt">View Clothing Guide →</a>
-            </div>
-        </div>
-    </div>
+
+<body class="m-0 text-[#1d1d1f] font-sans"
+  style="
+  background-image: url('/tool_background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;">
+    <main class="max-w-[1100px] mx-auto px-6 pt-[120px] pb-16">
+        <!-- Heading -->
+        <section class="text-center mb-14">
+            <h1 class="text-[48px] font-bold leading-tight mb-4">Protection Tools</h1>
+            <p class="text-[18px] leading-8 text-[#6b7280] max-w-[650px] mx-auto">
+                Use our interactive tools to calculate exactly what you need to stay safe in
+                the sun today.
+            </p>
+        </section>
+
+        <!-- Tool Cards -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[860px] mx-auto">
+            <!-- Sunscreen Calculator -->
+            <a href="./calculator.html"
+                class="group rounded-[32px] border border-[#e7e7e7] bg-white px-8 py-8 no-underline shadow-[0_6px_18px_rgba(0,0,0,0.03)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_12px_28px_rgba(0,0,0,0.06)]">
+                <div
+                    class="w-[58px] h-[58px] rounded-[16px] bg-[#eaf1ff] flex items-center justify-center text-[28px] mb-8">
+                    🧴
+                </div>
+
+                <h2 class="text-[24px] font-bold text-[#111827] mb-4">
+                    Sunscreen Calculator
+                </h2>
+
+                <p class="text-[17px] leading-8 text-[#6b7280] mb-8 max-w-[320px]">
+                    Not sure how much sunscreen to apply? Use our calculator to find the exact
+                    dosage required for full body protection.
+                </p>
+
+                <span
+                    class="inline-flex items-center gap-2 text-[18px] font-semibold text-[#2563ff] transition duration-300 group-hover:translate-x-1">
+                    Open Calculator
+                    <span aria-hidden="true">→</span>
+                </span>
+            </a>
+
+            <!-- Clothing Advice -->
+            <a href="./clothing_advice.html"
+                class="group rounded-[32px] border border-[#e7e7e7] bg-white px-8 py-8 no-underline shadow-[0_6px_18px_rgba(0,0,0,0.03)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_12px_28px_rgba(0,0,0,0.06)]">
+                <div
+                    class="w-[58px] h-[58px] rounded-[16px] bg-[#e8f8ef] flex items-center justify-center text-[28px] mb-8">
+                    👕
+                </div>
+
+                <h2 class="text-[24px] font-bold text-[#111827] mb-4">
+                    Clothing Advice
+                </h2>
+
+                <p class="text-[17px] leading-8 text-[#6b7280] mb-8 max-w-[320px]">
+                    Check the best protective clothing to wear based on today's UV index,
+                    including hat styles and UPF material recommendations.
+                </p>
+
+                <span
+                    class="inline-flex items-center gap-2 text-[18px] font-semibold text-[#10b26c] transition duration-300 group-hover:translate-x-1">
+                    View Clothing Guide
+                    <span aria-hidden="true">→</span>
+                </span>
+            </a>
+        </section>
+    </main>
 
     <script type="module" src="/src/main.js"></script>
 </body>
+
 </html>
