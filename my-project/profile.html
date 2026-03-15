@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>SunSafe | Personalized Profile</title>
-        <link rel="stylesheet" href="src/style.css">
-        <link rel="stylesheet" href="src/profile.css">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SunSafe | Personalized Profile</title>
+    <link rel="stylesheet" href="src/style.css">
+    <link rel="stylesheet" href="src/profile.css">
+</head>
 <body class="bg-app">
     <main class="max-w-[1200px] mx-auto mt-28 mb-10 px-6">
         <div class="profile-container">
@@ -65,19 +65,28 @@
             <aside class="panel-sidebar card-glass">
                 <div class="insight-box">
                     <h4 class="sidebar-title">Safety Insights</h4>
-                    <p class="sidebar-desc">Real-time analysis based on your current location's UV index.</p>
+                    
+                    <div class="uv-meter-box">
+                        <span class="insight-label">Current UV Index</span>
+                        <div class="uv-value-wrapper">
+                            <span class="uv-value">9</span>
+                            <span class="uv-status-badge">Very High</span>
+                        </div>
+                    </div>
+
+                    <p class="sidebar-desc">Real-time analysis based on your current location's UV intensity.</p>
                     
                     <div class="insight-grid">
                         <div class="insight-item">
                             <span class="insight-label">Exposure Limit</span>
                             <span id="preview-burn-time" class="insight-value">-- mins</span>
-                            <div class="progress-bar"><div class="progress-fill" style="width: 65%;"></div></div>
+                            <div class="progress-bar"><div class="progress-fill"></div></div>
                         </div>
                         
                         <div class="insight-item">
-                            <span class="insight-label">Required Protection</span>
+                            <span class="insight-label">Recommended Protection</span>
                             <span id="rec-spf-preview" class="insight-value">SPF --</span>
-                            <div class="tag-outline">Clinical Grade</div>
+                            <div class="tag-outline">Personalized Recommendation</div>
                         </div>
                     </div>
 

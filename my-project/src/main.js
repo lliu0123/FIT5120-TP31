@@ -2,11 +2,10 @@
 import './style.css'
 import './profile.css'
 import './navbar.js'
-import './uv.js' 
+import './uv.js' // Team module
 
 /**
  * US2.2: Core Calculation Logic
- * Calculates burn time and SPF recommendations
  */
 const getPersonalizedSafety = (uvIndex, skinType) => {
     const sensitivity = { '1': 2.5, '2': 2.0, '3': 1.5, '4': 1.0, '5': 0.7 };
@@ -27,45 +26,65 @@ const getPersonalizedSafety = (uvIndex, skinType) => {
     };
 };
 
-/**
- * Update UI for Profile Preview
- */
 const updateProfilePreview = () => {
-    const previewTime = document.getElementById('preview-burn-time');
-    const previewSPF = document.getElementById('rec-spf-preview');
-    const progressFill = document.querySelector('.progress-fill');
-    
-    if (!previewTime && !previewSPF) return;
+  const previewTime = document.getElementById('preview-burn-time');
+  const previewSPF = document.getElementById('rec-spf-preview');
+  const progressFill = document.querySelector('.progress-fill');
+  
+  if (!previewTime) return; // Not on profile page
 
-    const userSkin = localStorage.getItem('userSkinType') || '3';
-    
-    // --- STRATEGY: Get real-time UV from the DOM ---
-    const uvElement = document.querySelector('.uv-value');
-    const uvText = uvElement ? uvElement.textContent : "0";
-    // Strip any non-numeric characters to get the pure UV number
-    const currentUV = parseInt(uvText.replace(/[^0-9]/g, '')) || 0; 
+  // 1. Get Skin Type
+  const userSkin = localStorage.getItem('userSkinType') || '3';
+  
+  // 2. Get UV from Team's specific storage structure 'uvData'
+  let currentUV = 0;
+  try {
+      const rawData = localStorage.getItem("uvData");
+      if (rawData) {
+          const parsed = JSON.parse(rawData);
+          currentUV = parsed.uv || 0;
+      }
+  } catch (e) {
+      console.error("Failed to parse team uvData", e);
+  }
 
-    const safety = getPersonalizedSafety(currentUV, userSkin);
+  // Fallback if storage is empty
+  if (currentUV === 0) {
+      const uvText = document.querySelector('.uv-meter-box .uv-value')?.textContent || "0";
+      currentUV = parseInt(uvText.replace(/[^0-9]/g, '')) || 0;
+  }
 
-    if (previewTime) previewTime.textContent = safety.timeText;
-    if (previewSPF) previewSPF.textContent = safety.spf;
-    if (progressFill) progressFill.style.width = `${safety.riskPercent}%`;
-};
+  // 3. Sync the Local UV Meter (Number + Status Badge)
+  const localUVMeter = document.querySelector('.uv-meter-box .uv-value');
+  const localUVStatus = document.querySelector('.uv-status-badge');
 
-/**
- * DOUBLE PROTECTION: Watch the UV element for changes
- * If teammate's script updates the text, this will detect it instantly.
- */
-const startUVObserver = () => {
-    const uvTarget = document.querySelector('.uv-value');
-    if (!uvTarget) return;
+  if (localUVMeter && currentUV > 0) {
+      localUVMeter.textContent = currentUV;
+      
+      // Update the Status Badge text and color based on UV index
+      if (localUVStatus) {
+          let status = "Low";
+          let statusColor = "#10b981"; // Green
+          
+          if (currentUV >= 11) { status = "Extreme"; statusColor = "#9333ea"; }
+          else if (currentUV >= 8) { status = "Very High"; statusColor = "#ef4444"; }
+          else if (currentUV >= 6) { status = "High"; statusColor = "#f97316"; }
+          else if (currentUV >= 3) { status = "Moderate"; statusColor = "#facc15"; }
+          
+          localUVStatus.textContent = status;
+          localUVStatus.style.color = statusColor;
+          localUVStatus.style.backgroundColor = `${statusColor}1A`; // 10% opacity
+          localUVMeter.style.color = statusColor;
+      }
+  }
 
-    const observer = new MutationObserver(() => {
-        console.log("UV change detected via Observer");
-        updateProfilePreview();
-    });
+  // 4. Run Personalized Calculation
+  const safety = getPersonalizedSafety(currentUV, userSkin);
 
-    observer.observe(uvTarget, { childList: true, characterData: true, subtree: true });
+  // 5. Render calculations
+  previewTime.textContent = safety.timeText;
+  if (previewSPF) previewSPF.textContent = safety.spf;
+  if (progressFill) progressFill.style.width = `${safety.riskPercent}%`;
 };
 
 /**
@@ -99,21 +118,27 @@ const initProfileSelection = () => {
     });
 };
 
+/**
+ * Global Lifecycle
+ */
 document.addEventListener('DOMContentLoaded', () => {
     initProfileSelection();
-    startUVObserver(); // Start watching for UV text changes
     
-    // Fallback: Initial calculation after a short delay
-    setTimeout(updateProfilePreview, 1500);
+    // Initial sync
+    setTimeout(updateProfilePreview, 500);
 });
 
 /**
- * Global Hook for Teammate's update function
+ * Intercept Team's UV Update
+ * Since they exposed window.updateUVDisplay, we can hook into it.
  */
 const originalUpdateDisplay = window.updateUVDisplay;
 if (typeof originalUpdateDisplay === 'function') {
     window.updateUVDisplay = function(uv) {
+        // Execute original logic (colors, text, etc.)
         originalUpdateDisplay(uv);
+        
+        // Save to our logic's expectations and refresh profile
         updateProfilePreview();
     };
 }
