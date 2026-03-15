@@ -13,12 +13,10 @@ import './script.js'
  */
 const getPersonalizedSafety = (uvIndex, skinType) => {
     // Sensitivity factor mapping based on Fitzpatrick Scale
-    // Type I is most sensitive (2.5), Type V is most resilient (0.7)
     const sensitivity = { '1': 2.5, '2': 2.0, '3': 1.5, '4': 1.0, '5': 0.7 };
     const factor = sensitivity[skinType] || 1.5; 
 
     // AC2: Calculate time to damage (Minutes)
-    // Formula: 200 / (UV_Index * Sensitivity_Factor)
     const minutes = uvIndex > 0 ? Math.round(200 / (uvIndex * factor)) : 480;
     
     // AC3: Recommend SPF based on skin and UV intensity
@@ -36,26 +34,21 @@ const getPersonalizedSafety = (uvIndex, skinType) => {
 };
 
 /**
- * Function to render personalized data into the UI
- * Dynamically creates a container if it doesn't exist
+ * Function to render personalized data into the UI (Dashboard & Profile)
  * @param {number} uv - Current UV index
  */
 const injectPersonalizedInfo = (uv) => {
-    // AC1: Retrieve user's saved skin tone from local storage
     const userSkin = localStorage.getItem('userSkinType') || '3';
     const safety = getPersonalizedSafety(uv, userSkin);
 
-    // Find or create the personalized advice container
+    // --- Part A: Handle Dashboard UI (The two small glass cards) ---
     let adviceEl = document.getElementById('personalized-advice');
-    
     if (!adviceEl) {
         const uvCard = document.getElementById('uvCard');
         if (uvCard) {
             adviceEl = document.createElement('div');
             adviceEl.id = 'personalized-advice';
-            // Styling with Glassmorphism to match your Dashboard design
             adviceEl.className = 'mt-6 flex justify-center gap-4 fade-in';
-            // Insert the new element directly after the teammate's UV card
             uvCard.parentNode.insertBefore(adviceEl, uvCard.nextSibling);
         }
     }
@@ -72,44 +65,78 @@ const injectPersonalizedInfo = (uv) => {
           </div>
         `;
     }
+
+    // --- Part B: Handle Profile Page Preview (The burn time display) ---
+    const previewBurn = document.getElementById('preview-burn-time');
+    if (previewBurn) {
+        previewBurn.textContent = safety.timeText;
+    }
 };
 
 /**
  * Hook into teammate's global update function in uv.js
- * This ensures that whenever the UV index is updated, 
- * the personalized advice updates simultaneously.
  */
 const originalUpdateDisplay = window.updateUVDisplay;
 if (typeof originalUpdateDisplay === 'function') {
     window.updateUVDisplay = function(uv) {
-        // Execute the teammate's original UI updates (colors, UV text, etc.)
-        originalUpdateDisplay(uv);
-        
-        // Execute personalized logic for US2.2
-        injectPersonalizedInfo(uv);
+        originalUpdateDisplay(uv); // Teammate's logic
+        injectPersonalizedInfo(uv); // US2.2 Personalization logic
     };
 }
 
 /**
- * Handle Chart Animations (Awareness page)
+ * Awareness Page: Handle Chart Animations
  */
 const initChartAnimations = () => {
     const bars = document.querySelectorAll('.bar');
     if (bars.length > 0) {
         setTimeout(() => {
             bars.forEach(bar => {
-                const targetHeight = bar.getAttribute('data-height');
+                const targetHeight = bar.getAttribute('data-height') || bar.style.height;
                 if (targetHeight) bar.style.height = targetHeight;
             });
         }, 400);
     }
 };
 
+/**
+ * Profile Page: Handle Skin Tone Selection Interactions
+ */
+const initProfileSelection = () => {
+    const skinOptions = document.querySelectorAll('.skin-option');
+    if (!skinOptions.length) return;
+
+    // Highlight saved preference on load
+    const savedSkin = localStorage.getItem('userSkinType') || '3';
+    skinOptions.forEach(opt => {
+        if (opt.getAttribute('data-skin') === savedSkin) opt.classList.add('selected');
+    });
+
+    // Handle clicks
+    skinOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            const selectedType = option.getAttribute('data-skin');
+            localStorage.setItem('userSkinType', selectedType);
+            
+            // Visual feedback
+            skinOptions.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            
+            // Re-calculate immediately
+            const currentUVStr = document.querySelector('.uv-value')?.textContent || "0";
+            const currentUV = parseInt(currentUVStr);
+            injectPersonalizedInfo(isNaN(currentUV) ? 0 : currentUV);
+        });
+    });
+};
+
 // Application entry point
 document.addEventListener('DOMContentLoaded', () => {
+    // Run page-specific initializers
     initChartAnimations();
+    initProfileSelection();
     
-    // Check if there is an existing UV value on the page during initial load
+    // Initial data injection for Dashboard
     const initialUVValue = document.querySelector('.uv-value');
     if (initialUVValue) {
         const uv = parseInt(initialUVValue.textContent);
