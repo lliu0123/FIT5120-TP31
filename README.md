@@ -23,11 +23,5 @@ The app automatically fetches UV data based on your location:
 3. Gets current hour's UV index
 4. Updates the dashboard with real data and color indicators
 
-### Alternative UV APIs (if needed)
-If you want to switch to other APIs later:
-- **OpenUV**: https://openuv.io/ (requires free API key)
-- **WeatherAPI**: https://www.weatherapi.com/
-- **OpenWeatherMap**: https://openweathermap.org/api
-
 ### No Configuration Required!
 Unlike other APIs, Open-Meteo works out of the box. Just make sure your browser allows location access for the best experience.

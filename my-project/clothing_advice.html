@@ -4,30 +4,435 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SunSafe | Clothing Advice</title>
-  <link rel="stylesheet" href="src/style.css" />
+  <title>UV Safety Assistant | Clothing Advice</title>
 </head>
 
-<body class="m-0 font-sans text-[#1d1d1f]">
+<body class="m-0 text-[#1d1d1f] font-sans"
+  style="
+  background-image: url('/advice_background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;">
+  <main class="max-w-[1220px] mx-auto px-6 pt-[115px] pb-16">
 
-  <main class="container">
-    <h1 class="text-3xl font-bold mb-4">Clothing Advice</h1>
-    <p class="mb-4">
-      This page is a placeholder for clothing recommendations under different UV levels.
-      You can add suggestions for hats, sunglasses, and sun-protective apparel.
-    </p>
+    <!-- Top Hero Card -->
+    <section
+      class="rounded-[34px] bg-white border border-[#eaeaea] px-10 py-10 shadow-[0_10px_30px_rgba(0,0,0,0.04)] mb-12">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+        <div class="max-w-[620px]">
+          <h1 class="text-[28px] md:text-[34px] font-bold leading-tight mb-4">
+            Sun Protection Clothing Guide
+          </h1>
+          <p class="text-[18px] leading-8 text-[#6b7280]">
+            The right clothing provides the most effective barrier against UV radiation.
+            Here is what you should wear today.
+          </p>
+        </div>
 
-    <div class="card">
-      <h2 class="text-xl font-semibold mb-3">What to wear</h2>
-      <ul class="list-disc ml-6">
-        <li>Lightweight, long-sleeve shirts</li>
-        <li>Wide-brimmed hats</li>
-        <li>Sunglasses with UV protection</li>
-        <li>Sunscreen on exposed skin</li>
-      </ul>
-    </div>
+        <div id="uvLevelBadge"
+          class="min-w-[280px] rounded-[24px] bg-[#fff5f2] px-7 py-5 flex items-center gap-4 border border-[#fde1d8]">
+          <div id="uvLevelIcon"
+            class="w-[58px] h-[58px] rounded-full bg-[#ff3b4a] text-white flex items-center justify-center text-[28px] shadow-sm">
+            ☀
+          </div>
+          <div>
+            <p class="text-[13px] font-bold tracking-[0.16em] uppercase text-[#9b5c57] mb-1">
+              Current UV Level
+            </p>
+            <p id="uvLevelText" class="text-[24px] font-bold text-[#ff2b39]">
+              Very High
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recommended For Today -->
+    <section class="mb-12">
+      <div class="flex items-center gap-3 mb-8">
+        <div class="text-[24px] text-[#4f9cff]">👕</div>
+        <h2 class="text-[24px] md:text-[28px] font-bold">Recommended For You Today</h2>
+      </div>
+
+      <div id="clothingCards" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+        <!-- Dynamic cards inserted by script -->
+      </div>
+    </section>
+
+    <!-- Material Science Section -->
+    <section
+      class="rounded-[38px] overflow-hidden px-10 py-10 md:px-12 md:py-12 shadow-[0_18px_40px_rgba(20,28,80,0.18)]"
+      style="background: linear-gradient(135deg, #2f2ca8 0%, #111f56 100%);">
+      <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-10 items-start">
+        <div>
+          <div
+            class="inline-flex items-center rounded-full bg-[rgba(255,255,255,0.10)] border border-[rgba(255,255,255,0.08)] px-5 py-2 text-[14px] font-semibold tracking-[0.08em] uppercase text-[#cfd4ff] mb-8">
+            ⊙ Material Science
+          </div>
+
+          <h2 class="text-[34px] md:text-[48px] font-bold leading-[1.06] text-white mb-6">
+            Best UV <br />
+            Protective Fabrics
+          </h2>
+
+          <p class="text-[19px] leading-9 text-[#c8cdf8] max-w-[520px]">
+            Not all fabrics are created equal. These materials help block ultraviolet
+            radiation while keeping your body cool and comfortable in the Australian sun.
+          </p>
+        </div>
+
+        <div id="materialCards" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <!-- Dynamic material cards inserted by script -->
+        </div>
+      </div>
+    </section>
   </main>
+
   <script type="module" src="/src/main.js"></script>
+
+  <script>
+    function getStoredUVData() {
+      try {
+        const raw = localStorage.getItem("uvData");
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (typeof parsed.uv !== "number" || Number.isNaN(parsed.uv)) return null;
+        return parsed;
+      } catch {
+        return null;
+      }
+    }
+
+    const storedUVData = getStoredUVData();
+    const uvIndex = storedUVData?.uv ?? 8;
+    const locationName = storedUVData?.location ?? "Melbourne, VIC";
+
+    const uvLevelTextEl = document.getElementById("uvLevelText");
+    const uvLevelBadgeEl = document.getElementById("uvLevelBadge");
+    const uvLevelIconEl = document.getElementById("uvLevelIcon");
+    const clothingCardsEl = document.getElementById("clothingCards");
+    const materialCardsEl = document.getElementById("materialCards");
+
+    function getUvCategory(uv) {
+      if (uv <= 2) return "Low";
+      if (uv <= 5) return "Moderate";
+      if (uv <= 7) return "High";
+      if (uv <= 10) return "Very High";
+      return "Extreme";
+    }
+
+    function getUvTheme(level) {
+      const themes = {
+        Low: {
+          badgeBg: "#f1fbf4",
+          badgeBorder: "#cfead7",
+          iconBg: "#34c759",
+          textColor: "#198f42"
+        },
+        Moderate: {
+          badgeBg: "#fff8df",
+          badgeBorder: "#f3e2a4",
+          iconBg: "#f4c430",
+          textColor: "#9a7400"
+        },
+        High: {
+          badgeBg: "#fff2e8",
+          badgeBorder: "#ffd5b5",
+          iconBg: "#ff8a3d",
+          textColor: "#d65f10"
+        },
+        "Very High": {
+          badgeBg: "#fff5f2",
+          badgeBorder: "#fde1d8",
+          iconBg: "#ff3b4a",
+          textColor: "#ff2b39"
+        },
+        Extreme: {
+          badgeBg: "#f7f0ff",
+          badgeBorder: "#e3d0ff",
+          iconBg: "#8b5cf6",
+          textColor: "#7c3aed"
+        }
+      };
+      return themes[level];
+    }
+
+    function getClothingRecommendations(level) {
+      const recommendationMap = {
+        Low: [
+          {
+            icon: "🧢",
+            iconBg: "#fff9e8",
+            iconColor: "#e0a800",
+            title: "Cap or Light Hat",
+            text: "Useful for casual outdoor activity even when UV is relatively low."
+          },
+          {
+            icon: "👕",
+            iconBg: "#eef4ff",
+            iconColor: "#3678ff",
+            title: "Light Long-Sleeve Layer",
+            text: "Adds extra protection during extended time outdoors."
+          },
+          {
+            icon: "🕶",
+            iconBg: "#f4efff",
+            iconColor: "#8b5cf6",
+            title: "Sunglasses",
+            text: "Helps reduce glare and protects eyes from UV exposure."
+          },
+          {
+            icon: "🛡",
+            iconBg: "#ebfbf3",
+            iconColor: "#1fbf75",
+            title: "Basic Protective Wear",
+            text: "Comfortable clothing with decent coverage is usually sufficient."
+          }
+        ],
+        Moderate: [
+          {
+            icon: "🧢",
+            iconBg: "#fff9e8",
+            iconColor: "#e0a800",
+            title: "Wide-Brim Hat",
+            text: "Provides better protection for the face, ears, and neck."
+          },
+          {
+            icon: "👕",
+            iconBg: "#eef4ff",
+            iconColor: "#3678ff",
+            title: "Long Sleeve Shirt",
+            text: "Covers exposed arms during moderate UV conditions."
+          },
+          {
+            icon: "🕶",
+            iconBg: "#f4efff",
+            iconColor: "#8b5cf6",
+            title: "UV Sunglasses",
+            text: "Protects eyes and surrounding skin from UV damage."
+          },
+          {
+            icon: "🛡",
+            iconBg: "#ebfbf3",
+            iconColor: "#1fbf75",
+            title: "UPF Clothing",
+            text: "A good option if you plan to stay outdoors for longer periods."
+          }
+        ],
+        High: [
+          {
+            icon: "👒",
+            iconBg: "#fff9e8",
+            iconColor: "#e0a800",
+            title: "Wide-Brim Hat",
+            text: "Protects face, ears, and neck from direct sun exposure."
+          },
+          {
+            icon: "👕",
+            iconBg: "#eef4ff",
+            iconColor: "#3678ff",
+            title: "Long Sleeve Shirt",
+            text: "Covers arms and torso, reducing exposed skin area."
+          },
+          {
+            icon: "🕶",
+            iconBg: "#f4efff",
+            iconColor: "#8b5cf6",
+            title: "UV Sunglasses",
+            text: "Protects eyes from UV damage and glare."
+          },
+          {
+            icon: "🛡",
+            iconBg: "#ebfbf3",
+            iconColor: "#1fbf75",
+            title: "UV Protective Wear",
+            text: "Clothing with UPF protection is strongly recommended."
+          }
+        ],
+        "Very High": [
+          {
+            icon: "👒",
+            iconBg: "#fff9e8",
+            iconColor: "#e0a800",
+            title: "Wide-Brim Hat",
+            text: "Protects face, ears, and neck from direct sun exposure."
+          },
+          {
+            icon: "👕",
+            iconBg: "#eef4ff",
+            iconColor: "#3678ff",
+            title: "Long Sleeve Shirt",
+            text: "Covers arms and torso, reducing exposed skin area."
+          },
+          {
+            icon: "🕶",
+            iconBg: "#f4efff",
+            iconColor: "#8b5cf6",
+            title: "UV Sunglasses",
+            text: "Protects eyes from UV damage and glare."
+          },
+          {
+            icon: "🛡",
+            iconBg: "#ebfbf3",
+            iconColor: "#1fbf75",
+            title: "UV Protective Wear",
+            text: "Specialized clothing with UPF 50+ rating is recommended."
+          }
+        ],
+        Extreme: [
+          {
+            icon: "👒",
+            iconBg: "#fff9e8",
+            iconColor: "#e0a800",
+            title: "Full-Brim Hat",
+            text: "Maximum head, face, and neck protection is essential."
+          },
+          {
+            icon: "🧥",
+            iconBg: "#eef4ff",
+            iconColor: "#3678ff",
+            title: "Full-Cover Long Sleeves",
+            text: "Wear tightly woven full-length sleeves and longer coverage."
+          },
+          {
+            icon: "🕶",
+            iconBg: "#f4efff",
+            iconColor: "#8b5cf6",
+            title: "Certified UV Sunglasses",
+            text: "Essential for strong glare and extreme UV protection."
+          },
+          {
+            icon: "🛡",
+            iconBg: "#ebfbf3",
+            iconColor: "#1fbf75",
+            title: "UPF 50+ Protective Wear",
+            text: "High-grade UV protective clothing should be prioritized."
+          }
+        ]
+      };
+      return recommendationMap[level];
+    }
+
+    function getMaterialRecommendations(level) {
+      const base = [
+        {
+          title: "Cotton",
+          text: "Natural fiber with good UV protection when tightly woven."
+        },
+        {
+          title: "Polyester",
+          text: "Synthetic fiber with excellent natural UV blocking properties."
+        },
+        {
+          title: "UPF-rated",
+          text: "Specially engineered clothing tested for guaranteed sun protection."
+        },
+        {
+          title: "Tightly Woven",
+          text: "Minimizes holes where UV rays can penetrate through to the skin."
+        }
+      ];
+
+      if (level === "Low") {
+        return [
+          {
+            title: "Cotton",
+            text: "Soft and breathable for daily use with modest UV protection."
+          },
+          {
+            title: "Denim / Canvas",
+            text: "Heavier fabrics can block more UV for longer outdoor exposure."
+          },
+          {
+            title: "Layered Fabrics",
+            text: "Two light layers can improve protection when needed."
+          },
+          {
+            title: "Tightly Woven",
+            text: "Still a smart choice if you spend extended time outdoors."
+          }
+        ];
+      }
+
+      if (level === "Moderate") {
+        return [
+          {
+            title: "Cotton",
+            text: "Natural fiber with good UV protection when tightly woven."
+          },
+          {
+            title: "Polyester",
+            text: "Lightweight performance fabric with stronger UV shielding."
+          },
+          {
+            title: "Blended Fabrics",
+            text: "Useful for balancing comfort, breathability, and coverage."
+          },
+          {
+            title: "Tightly Woven",
+            text: "Helps reduce UV penetration through the fabric."
+          }
+        ];
+      }
+
+      return base;
+    }
+
+    function renderUvBadge(level) {
+      const theme = getUvTheme(level);
+
+      uvLevelTextEl.textContent = level;
+      uvLevelTextEl.style.color = theme.textColor;
+
+      uvLevelBadgeEl.style.background = theme.badgeBg;
+      uvLevelBadgeEl.style.borderColor = theme.badgeBorder;
+
+      uvLevelIconEl.style.background = theme.iconBg;
+      uvLevelIconEl.style.color = "#ffffff";
+    }
+
+    function renderClothingCards(level) {
+      const cards = getClothingRecommendations(level);
+
+      clothingCardsEl.innerHTML = cards.map(card => `
+        <article class="rounded-[30px] bg-white border border-[#ececec] px-8 py-9 shadow-[0_8px_24px_rgba(0,0,0,0.03)] text-center min-h-[280px] flex flex-col items-center">
+          <div
+            class="w-[92px] h-[92px] rounded-[22px] flex items-center justify-center text-[40px] mb-8"
+            style="background:${card.iconBg}; color:${card.iconColor};">
+            ${card.icon}
+          </div>
+          <h3 class="text-[22px] font-bold text-[#111827] mb-4 leading-tight">
+            ${card.title}
+          </h3>
+          <p class="text-[17px] leading-8 text-[#6b7280]">
+            ${card.text}
+          </p>
+        </article>
+      `).join("");
+    }
+
+    function renderMaterialCards(level) {
+      const materials = getMaterialRecommendations(level);
+
+      materialCardsEl.innerHTML = materials.map(item => `
+        <article class="rounded-[24px] bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.06)] px-7 py-7 backdrop-blur-[2px]">
+          <div class="text-[#b8beff] text-[15px] mb-3">◎</div>
+          <h3 class="text-[20px] font-bold text-white mb-3">${item.title}</h3>
+          <p class="text-[17px] leading-8 text-[#c8cdf8]">${item.text}</p>
+        </article>
+      `).join("");
+    }
+
+    function initClothingAdvice() {
+      const level = getUvCategory(uvIndex);
+      renderUvBadge(level);
+      renderClothingCards(level);
+      renderMaterialCards(level);
+    }
+
+    initClothingAdvice();
+  </script>
 </body>
 
 </html>
