@@ -1,0 +1,210 @@
+/* --- Profile Dashboard Layout --- */
+.profile-container {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 24px;
+    align-items: stretch;
+    animation: fadeIn 0.6s ease-out;
+  }
+  
+  /* --- Panel Styling --- */
+  .panel-main {
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 32px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .panel-sidebar {
+    padding: 40px;
+    background: rgba(255, 140, 0, 0.04) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 32px;
+    border: 1px solid rgba(255, 140, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* --- Components --- */
+  .badge-mini {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(255, 140, 0, 0.1);
+    color: #FF8C00;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+  }
+  
+  .group-title {
+    font-size: 14px;
+    color: #86868b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 32px 0 16px 0;
+  }
+  
+  /* --- Skin Selector (Vertical Cards) --- */
+  .skin-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .skin-option-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .skin-option-card:hover {
+    transform: translateX(8px);
+    background: white;
+    border-color: rgba(255, 140, 0, 0.3);
+  }
+  
+  .skin-option-card.selected {
+    border-color: #FF8C00;
+    background: white;
+    box-shadow: 0 10px 25px rgba(255, 140, 0, 0.1);
+  }
+  
+  .color-swatch {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+    flex-shrink: 0;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+  }
+  
+  .type-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .type-id {
+    font-weight: 800;
+    font-size: 15px;
+    color: #1d1d1f;
+  }
+  
+  .type-label {
+    font-size: 13px;
+    color: #86868b;
+    margin-top: 2px;
+  }
+  
+  /* --- Sidebar Insights --- */
+  .sidebar-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1d1d1f;
+    margin-bottom: 8px;
+  }
+  
+  .sidebar-desc {
+    font-size: 14px;
+    color: #86868b;
+    line-height: 1.5;
+  }
+  
+  .insight-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+    margin-top: 45px;
+  }
+  
+  .insight-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #86868b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+  
+  .insight-value {
+    display: block;
+    font-size: 36px;
+    font-weight: 800;
+    color: #1d1d1f;
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+  
+  .progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 3px;
+    margin-top: 15px;
+    overflow: hidden;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background: #FF8C00;
+    width: 0%; /* Animated via JS if needed, or set a default */
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .tag-outline {
+    display: inline-block;
+    padding: 3px 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #86868b;
+    margin-top: 12px;
+    text-transform: uppercase;
+  }
+  
+  /* --- Status Toast --- */
+  .save-toast {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 8px 16px;
+    background: #1d1d1f;
+    color: white;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+  }
+  
+  .save-toast.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* --- Responsive Layout --- */
+  @media (max-width: 968px) {
+    .profile-container {
+      grid-template-columns: 1fr;
+    }
+    .panel-sidebar {
+      order: -1;
+    }
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }

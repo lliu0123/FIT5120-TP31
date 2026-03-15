@@ -14,7 +14,7 @@ function loadNavbar() {
                 <li><a href="index.html" class="nav-link" id="nav-index">Dashboard</a></li>
                 <li><a href="awareness.html" class="nav-link" id="nav-awareness">UV Awareness</a></li>
                 <li><a href="tools.html" class="nav-link" id="nav-tools">Protection Tools</a></li>
-                <li><a href="profile.html" class="nav-link" id="nav-profile">Profile</a></li>
+                <li><a href="profile.html" class="nav-link" id="nav-profile">About Your Skin</a></li>
             </ul>
         </div>
     </nav>`;

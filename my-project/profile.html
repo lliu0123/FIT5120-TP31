@@ -1,75 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SunSafe | Profile Settings</title>
-    <link rel="stylesheet" href="src/style.css">
-</head>
-<body>
-    <div class="container">
-        <div class="profile-card">
-            <div class="profile-header">
-                <div class="user-meta">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SunSafe | Personalized Profile</title>
+        <link rel="stylesheet" href="src/style.css">
+        <link rel="stylesheet" href="src/profile.css">
+    </head>
+<body class="bg-app">
+    <main class="max-w-[1200px] mx-auto mt-28 mb-10 px-6">
+        <div class="profile-container">
+            
+            <div class="panel-main card-glass">
+                <header class="panel-header">
+                    <span class="badge-mini">Configuration</span>
                     <h2>Personalize Your Protection</h2>
-                    <p class="location-text">Your preferences are saved locally on this device.</p>
+                    <p>Adjust your skin profile to refine our UV protection algorithms for your specific needs.</p>
+                </header>
+
+                <div class="settings-group">
+                    <h3 class="group-title">Fitzpatrick Skin Scale</h3>
+                    <div class="skin-selector">
+                        <div class="skin-option-card" data-skin="1">
+                            <div class="color-swatch" style="background: #FAD7B1;"></div>
+                            <div class="type-info">
+                                <span class="type-id">TYPE I</span>
+                                <span class="type-label">Always burns, never tans</span>
+                            </div>
+                        </div>
+                        <div class="skin-option-card" data-skin="2">
+                            <div class="color-swatch" style="background: #EAC09F;"></div>
+                            <div class="type-info">
+                                <span class="type-id">TYPE II</span>
+                                <span class="type-label">Usually burns, tans minimally</span>
+                            </div>
+                        </div>
+                        <div class="skin-option-card" data-skin="3">
+                            <div class="color-swatch" style="background: #D8AA8A;"></div>
+                            <div class="type-info">
+                                <span class="type-id">TYPE III</span>
+                                <span class="type-label">Slight burn, tans uniformly</span>
+                            </div>
+                        </div>
+                        <div class="skin-option-card" data-skin="4">
+                            <div class="color-swatch" style="background: #C4916F;"></div>
+                            <div class="type-info">
+                                <span class="type-id">TYPE IV</span>
+                                <span class="type-label">Burns minimally, tans easily</span>
+                            </div>
+                        </div>
+                        <div class="skin-option-card" data-skin="5">
+                            <div class="color-swatch" style="background: #AD7A54;"></div>
+                            <div class="type-info">
+                                <span class="type-id">TYPE V</span>
+                                <span class="type-label">Rarely burns, tans intensely</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <div id="save-status" class="save-toast">Preferences Synchronized</div>
             </div>
 
-            <div class="settings-section">
-                <h3>Select Your Skin Type</h3>
-                <p class="sub-text">This helps us provide more accurate sun protection advice tailored to your skin's sensitivity.</p>
-                
-                <div class="skin-type-grid">
-                    <div class="skin-option" data-skin="1">
-                        <div class="skin-color" style="background: #FFEDE1;"></div>
-                        <span>Type I: Very Fair</span>
-                    </div>
-                    <div class="skin-option" data-skin="2">
-                        <div class="skin-color" style="background: #F5D3B8;"></div>
-                        <span>Type II: Fair</span>
-                    </div>
-                    <div class="skin-option" data-skin="3">
-                        <div class="skin-color" style="background: #E1B382;"></div>
-                        <span>Type III: Medium</span>
-                    </div>
-                    <div class="skin-option" data-skin="4">
-                        <div class="skin-color" style="background: #A67C52;"></div>
-                        <span>Type IV: Olive</span>
-                    </div>
-                    <div class="skin-option" data-skin="5">
-                        <div class="skin-color" style="background: #623A17;"></div>
-                        <span>Type V: Dark</span>
-                    </div>
-                </div>
-                <div id="personalized-preview" class="personalized-preview-box">
-                    <h4>Your Personalized Sun Profile</h4>
-                    <p class="preview-subtext">Based on current UV Index in your area.</p>
+            <aside class="panel-sidebar card-glass">
+                <div class="insight-box">
+                    <h4 class="sidebar-title">Safety Insights</h4>
+                    <p class="sidebar-desc">Real-time analysis based on your current location's UV index.</p>
                     
-                    <div class="preview-stats">
-                        <div class="stat-card">
-                            <span class="stat-label">Time to Damage</span>
-                            <span id="preview-time" class="stat-value">-- mins</span>
+                    <div class="insight-grid">
+                        <div class="insight-item">
+                            <span class="insight-label">Exposure Limit</span>
+                            <span id="preview-burn-time" class="insight-value">-- mins</span>
+                            <div class="progress-bar"><div class="progress-fill" style="width: 65%;"></div></div>
                         </div>
-                        <div class="stat-card">
-                            <span class="stat-label">Recommended Protection</span>
-                            <span id="preview-spf" class="stat-value">SPF --</span>
+                        
+                        <div class="insight-item">
+                            <span class="insight-label">Required Protection</span>
+                            <span id="rec-spf-preview" class="insight-value">SPF --</span>
+                            <div class="tag-outline">Clinical Grade</div>
                         </div>
                     </div>
-                </div>
 
-                <div id="save-status" class="save-status">✓ Preference updated successfully!</div>
-            </div>
-
-            <div class="settings-section" style="border-top: 1px solid #f2f2f2;">
-                <h3>App Preferences</h3>
-                <div class="settings-item-static">
-                    <p><strong>Location Detection:</strong> Browser Managed</p>
-                    <p><strong>Data Storage:</strong> LocalStorage Enabled</p>
+                    <div class="data-footer">
+                        <p>Calculations adhere to standard Fitzpatrick sensitivity multipliers.</p>
+                    </div>
                 </div>
-            </div>
+            </aside>
+
         </div>
-    </div>
+    </main>
 
     <script type="module" src="/src/main.js"></script>
 </body>
