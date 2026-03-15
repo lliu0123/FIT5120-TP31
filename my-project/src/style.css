@@ -79,14 +79,55 @@ body {
   margin: 0 !important;
 }
 
-/* --- Nav Links Alignment --- */
+/* --- Navigation Links Alignment --- */
 .nav-links {
   display: flex !important;
   list-style: none !important;
-  gap: 8px !important;
+  gap: 10px !important; /* Spacing between menu items */
   margin: 0 !important;
   padding: 0 !important;
   align-items: center !important;
+}
+
+/* --- Base Link Style --- */
+.nav-link {
+  text-decoration: none !important;
+  color: #86868b; /* Muted grey for inactive state */
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 18px; /* Pill-shaped padding */
+  border-radius: 20px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  white-space: nowrap;
+}
+
+/* --- Hover State --- */
+.nav-link:hover {
+  color: #1d1d1f; /* Darker text on hover */
+  background: rgba(0, 0, 0, 0.04); /* Subtle background tint */
+}
+
+/* --- Active State: Elevated Highlight --- */
+.nav-link.active {
+  color: #FF8C00 !important;       /* Brand orange text */
+  font-weight: 700 !important;       /* Bold for emphasis */
+  background: #FFF5E6 !important;    /* Light orange background wash */
+  box-shadow: 0 4px 12px rgba(255, 140, 0, 0.15); /* Shadow for elevation effect */
+  transform: translateY(-1px);      /* Slight upward lift */
+}
+
+/* --- Active Indicator Dot --- */
+.nav-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background-color: #FF8C00;
+  border-radius: 50%;
 }
 
 /* --- Dashboard & Profile Styles (Preserved) --- */

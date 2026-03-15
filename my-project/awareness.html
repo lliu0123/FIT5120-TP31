@@ -7,23 +7,9 @@
     <link rel="stylesheet" href="src/style.css">
 </head>
 <body class="bg-app">
-    
-    <nav class="navbar">
-        <div class="nav-content">
-            <a href="index.html" class="brand-logo">
-                <div class="logo-icon-box"></div><span class="brand-text">SUNSAFE</span>
-            </a>
-            <ul class="nav-links">
-                <li><a href="index.html" class="nav-link">Dashboard</a></li>
-                <li><a href="awareness.html" class="nav-link active">UV Awareness</a></li>
-                <li><a href="profile.html" class="nav-link">About Your Skin</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <div class="max-w-[1000px] mx-auto mt-28 mb-10 px-5">
+    <main class="max-w-[1000px] mx-auto mt-28 mb-10 px-5">
         
-        <div class="awareness-hero">
+        <section class="awareness-hero fade-in">
             <div class="hero-icon-box">
                 <div class="custom-shield"></div>
             </div>
@@ -31,9 +17,9 @@
                 <h2>UV Awareness and Skin Cancer Risk</h2>
                 <p>Understanding UV exposure is your first line of defense. Taking practical protective actions daily helps prevent skin cancer, premature ageing, and serious health risks.</p>
             </div>
-        </div>
+        </section>
 
-        <div class="chart-card">
+        <section class="chart-card fade-in delay-1">
             <div class="chart-header">
                 <div class="info-tag">i</div>
                 <div class="header-text">
@@ -44,24 +30,20 @@
 
             <div class="chart-container">
                 <div class="chart-y-axis">
-                    <span>34000</span>
-                    <span>25500</span>
-                    <span>17000</span>
-                    <span>8500</span>
-                    <span>0</span>
+                    <span>34000</span><span>25500</span><span>17000</span><span>8500</span><span>0</span>
                 </div>
                 <div class="chart-bars">
-                    <div class="bar-group"><div class="bar" data-height="15%"></div><span>18-25</span></div>
-                    <div class="bar-group"><div class="bar" data-height="25%"></div><span>26-35</span></div>
-                    <div class="bar-group"><div class="bar" data-height="40%"></div><span>36-45</span></div>
-                    <div class="bar-group"><div class="bar" data-height="60%"></div><span>46-55</span></div>
-                    <div class="bar-group"><div class="bar" data-height="75%"></div><span>56-65</span></div>
-                    <div class="bar-group"><div class="bar" data-height="90%"></div><span>66+</span></div>
+                    <div class="bar-group"><div class="bar" style="height: 15%"></div><span>18-25</span></div>
+                    <div class="bar-group"><div class="bar" style="height: 25%"></div><span>26-35</span></div>
+                    <div class="bar-group"><div class="bar" style="height: 40%"></div><span>36-45</span></div>
+                    <div class="bar-group"><div class="bar" style="height: 60%"></div><span>46-55</span></div>
+                    <div class="bar-group"><div class="bar" style="height: 75%"></div><span>56-65</span></div>
+                    <div class="bar-group"><div class="bar" style="height: 90%"></div><span>66+</span></div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="myths-section">
+        <section class="myths-section fade-in delay-2">
             <h3 class="section-title">Common UV Myths vs. Facts</h3>
             <div class="cards-grid">
                 
@@ -138,8 +120,8 @@
                 </div>
 
             </div>
-        </div>
-    </div> 
+        </section>
+    </main> 
 
     <script type="module" src="/src/main.js"></script>
 </body>
