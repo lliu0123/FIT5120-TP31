@@ -1,0 +1,68 @@
+/* --- Awareness Page Specific Styles --- */
+
+/* 1. The main background container (Matches HTML class) */
+.awareness-bg-container {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1 !important;
+    background-color: #ffffff !important;
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(255, 150, 0, 0.15) 0px, transparent 50%), 
+        radial-gradient(at 100% 0%, rgba(255, 200, 100, 0.12) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(255, 255, 255, 1) 0px, transparent 50%) !important;
+    overflow: hidden;
+}
+
+/* 2. Adding the grid overlay */
+.awareness-bg-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(ellipse at center, black, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black, transparent 80%);
+    pointer-events: none;
+}
+
+/* 3. Floating "Sun" lens flares (Matches HTML class) */
+.awareness-sun-glow {
+    position: absolute;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(255, 165, 0, 0.1) 0%, transparent 70%);
+    top: -200px;
+    right: -100px;
+    filter: blur(80px);
+    animation: pulseGlow 15s infinite alternate ease-in-out;
+    pointer-events: none;
+}
+
+@keyframes pulseGlow {
+    0% { transform: scale(1); opacity: 0.4; }
+    100% { transform: scale(1.3); opacity: 0.7; }
+}
+
+/* 4. Glassmorphism for the Chart Card */
+.awareness-content-card {
+    background: rgba(255, 255, 255, 0.6) !important;
+    backdrop-filter: blur(20px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    border-radius: 32px !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05) !important;
+    position: relative;
+    z-index: 10;
+}
+
+/* 5. Fix for Flip Cards to look better on this background */
+.flip-card-front, .flip-card-back {
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}

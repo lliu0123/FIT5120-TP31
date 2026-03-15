@@ -5,9 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SunSafe | UV Awareness</title>
     <link rel="stylesheet" href="src/style.css">
+    <link rel="stylesheet" href="src/awarenessBG.css">
 </head>
 <body class="bg-app">
-    <main class="max-w-[1000px] mx-auto mt-28 mb-10 px-5">
+    <div class="awareness-bg-container">
+        <div class="awareness-sun-glow"></div>
+    </div>
+
+    <main class="relative z-10 max-w-[1000px] mx-auto mt-28 mb-10 px-5">
         
         <section class="awareness-hero fade-in">
             <div class="hero-icon-box">
@@ -19,7 +24,7 @@
             </div>
         </section>
 
-        <section class="chart-card fade-in delay-1">
+        <section class="chart-card awareness-content-card fade-in delay-1">
             <div class="chart-header">
                 <div class="info-tag">i</div>
                 <div class="header-text">
