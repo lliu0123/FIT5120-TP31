@@ -1,99 +1,53 @@
 /**
- * UV-related logic (location + UV fetch + display)
- *
- * This module is intentionally separated from script.js to keep the page logic
- * modular and easier to maintain as the app grows.
+ * UV-related logic (Location + UV fetch + Display)
  */
 
+/**
+ * Converts coordinates into a readable location name using OpenStreetMap API
+ */
 async function getLocationName(lat, lng) {
   try {
-    const response = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10&addressdetails=1&accept-language=en`
-    );
-    if (!response.ok) throw new Error('Geocoding API request failed');
-
-    const data = await response.json();
-    if (data && data.address) {
-      const address = data.address;
-      const city = address.city || address.town || address.village || address.suburb;
-      const state = address.state || address.region;
-      const country = address.country;
-
-      if (city && state) return `${city}, ${state}`;
-      if (city) return `${city}, ${country}`;
-      if (state) return `${state}, ${country}`;
-      return data.display_name.split(',')[0] || `${lat.toFixed(2)}, ${lng.toFixed(2)}`;
-    }
-
-    return `${lat.toFixed(2)}, ${lng.toFixed(2)}`;
+      const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10&addressdetails=1&accept-language=en`
+      );
+      const data = await response.json();
+      if (data && data.address) {
+          const address = data.address;
+          const city = address.city || address.town || address.village || address.suburb || "Unknown City";
+          const state = address.state || "";
+          return state ? `${city}, ${state}` : city;
+      }
+      return `${lat.toFixed(2)}, ${lng.toFixed(2)}`;
   } catch (error) {
-    console.error('Error getting location name:', error);
-    return `${lat.toFixed(2)}, ${lng.toFixed(2)}`;
+      console.error('Error getting location name:', error);
+      return "Melbourne, VIC"; // Default fallback
   }
 }
 
+/**
+* Fetches the current UV index based on latitude and longitude
+*/
 async function getUVIndex(lat, lng) {
-  const BASE_URL = window.AppConfig?.OPEN_METEO_BASE_URL || 'https://api.open-meteo.com/v1/forecast';
-
   try {
-    const url = `${BASE_URL}?latitude=${lat}&longitude=${lng}&hourly=uv_index&forecast_days=1`;
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`API request failed: ${response.status} ${response.statusText}`);
-
-    const data = await response.json();
-    if (!data.hourly || !data.hourly.uv_index || !data.hourly.time) {
-      throw new Error('Invalid API response format');
-    }
-
-    const now = new Date();
-    const currentHour = now.getUTCHours();
-    const currentDate = now.toISOString().split('T')[0];
-
-    const hourlyTimes = data.hourly.time;
-    const hourlyUV = data.hourly.uv_index;
-
-    const currentTimeString = `${currentDate}T${currentHour.toString().padStart(2, '0')}:00`;
-    const timeIndex = hourlyTimes.findIndex((time) => time.startsWith(currentTimeString));
-
-    if (timeIndex === -1) {
-      const uvIndex = Math.round(hourlyUV[hourlyUV.length - 1]);
-      return uvIndex;
-    }
-
-    return Math.round(hourlyUV[timeIndex]);
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&hourly=uv_index&forecast_days=1`;
+      const response = await fetch(url);
+      const data = await response.json();
+      
+      // Match the current local hour to the API response array
+      const now = new Date();
+      const currentHour = now.getHours(); 
+      const uvValue = data.hourly.uv_index[currentHour];
+      
+      return Math.round(uvValue || 0);
   } catch (error) {
-    console.error('Error fetching UV data:', error);
-    showUVError(error.message);
-    return getSimulatedUV(lat, lng);
+      console.error('Error fetching UV data:', error);
+      return 9; // Default value if API fails
   }
 }
 
-function getSimulatedUV(lat, lng) {
-  const baseUV = Math.max(1, Math.min(12, Math.abs(lat) < 20 ? 10 : Math.abs(lat) < 40 ? 7 : 3));
-  const variation = (Math.sin(Date.now() / 86400000) + 1) * 2;
-  return Math.max(1, Math.min(12, Math.round(baseUV + variation)));
-}
-
-function showUVError(message) {
-  const descEl = document.querySelector('.uv-description');
-  if (!descEl) return;
-  descEl.textContent = `⚠️ ${message} Using estimated data.`;
-  descEl.style.color = '#ff6b6b';
-  setTimeout(() => {
-    descEl.style.color = '';
-  }, 5000);
-}
-
-function showUVElements() {
-  const uvCard = document.getElementById('uvCard');
-  const uvDescription = document.getElementById('uvDescription');
-  const riskLegend = document.getElementById('riskLegend');
-
-  if (uvCard) uvCard.classList.remove('hidden');
-  if (uvDescription) uvDescription.classList.remove('hidden');
-  if (riskLegend) riskLegend.classList.remove('hidden');
-}
-
+/**
+* Updates the UI elements (card color, text, and shadow) based on UV value
+*/
 function updateUVDisplay(uv) {
   const uvValueEl = document.querySelector('.uv-value');
   const uvStatusEl = document.querySelector('.uv-status');
@@ -101,157 +55,103 @@ function updateUVDisplay(uv) {
 
   if (!uvValueEl || !uvStatusEl || !uvCard) return;
 
-  let level;
-  let bgClass;
-  let textClass;
-
-  if (uv <= 2) {
-    level = 'LOW';
-    bgClass = 'bg-green-500';
-    textClass = 'text-white';
-  } else if (uv <= 5) {
-    level = 'MODERATE';
-    bgClass = 'bg-yellow-400';
-    textClass = 'text-gray-800';
-  } else if (uv <= 7) {
-    level = 'HIGH';
-    bgClass = 'bg-orange-500';
-    textClass = 'text-white';
-  } else if (uv <= 10) {
-    level = 'VERY HIGH';
-    bgClass = 'bg-red-500';
-    textClass = 'text-white';
-  } else {
-    level = 'EXTREME';
-    bgClass = 'bg-purple-600';
-    textClass = 'text-white';
-  }
-
-  uvValueEl.textContent = uv;
-  uvStatusEl.textContent = level;
-
-  // Remove all possible background classes
-  uvCard.classList.remove('bg-green-500', 'bg-yellow-400', 'bg-orange-500', 'bg-red-500', 'bg-purple-600');
-  uvCard.classList.remove('text-white', 'text-gray-800');
-
-  // Add new classes
-  uvCard.classList.add(bgClass, textClass);
-
-  const descEl = document.querySelector('.uv-description');
-  const descriptions = {
-    LOW: 'Low UV - minimal protection required.',
-    MODERATE: 'Moderate UV - some protection required.',
-    HIGH: 'High UV - protection required.',
-    'VERY HIGH': 'Very High UV - extra protection required. Avoid sun during peak hours.',
-    EXTREME: 'Extreme UV - maximum protection required. Avoid sun exposure.',
+  // Define UI configuration for different UV levels
+  let config = {
+      level: 'LOW',
+      color: 'bg-green-500',
+      shadow: 'rgba(34, 197, 94, 0.3)'
   };
 
-  if (descEl) descEl.textContent = descriptions[level];
-
-  document.querySelectorAll('.risk-tags .tag').forEach((tag) => tag.classList.remove('active'));
-  const activeTag = document.querySelector(`.risk-tags .tag.${bgClass.replace('bg-', '').replace('-500', '').replace('-400', '').replace('-600', '')}`);
-  if (activeTag) activeTag.classList.add('active');
-}
-
-async function updateUV() {
-  if (!navigator.geolocation) {
-    showUVElements();
-    updateUVDisplay(9);
-    return;
+  if (uv >= 3 && uv <= 5) {
+      config = { level: 'MODERATE', color: 'bg-yellow-500', shadow: 'rgba(234, 179, 8, 0.3)' };
+  } else if (uv >= 6 && uv <= 7) {
+      config = { level: 'HIGH', color: 'bg-orange-500', shadow: 'rgba(249, 115, 22, 0.3)' };
+  } else if (uv >= 8 && uv <= 10) {
+      config = { level: 'VERY HIGH', color: 'bg-red-500', shadow: 'rgba(239, 68, 68, 0.3)' };
+  } else if (uv >= 11) {
+      config = { level: 'EXTREME', color: 'bg-purple-600', shadow: 'rgba(147, 51, 234, 0.3)' };
   }
 
-  return new Promise((resolve) => {
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        try {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
+  // Update text content
+  uvValueEl.textContent = uv;
+  uvStatusEl.textContent = config.level;
 
-          const locationName = await getLocationName(lat, lng);
-          document.querySelector('.location-badge').textContent = `📍 ${locationName}`;
-
-         const uvIndex = await getUVIndex(lat, lng);
-
-         saveUVDataToStorage({
-           uv: uvIndex,
-           location: locationName,
-         });
-
-         updateUVDisplay(uvIndex);
-         showUVElements();
-         resolve();
-         } catch (e) {
-           console.error(e);
-           resolve();
-         }
-      },
-      () => {
-        document.querySelector('.location-badge').textContent = '📍 Melbourne, VIC';
-
-        saveUVDataToStorage({
-          uv: 9,
-          location: 'Melbourne, VIC',
-        });
-
-        updateUVDisplay(9);
-        showUVElements();
-        resolve();
-      }
-    );
-  });
+  // Update CSS classes for smooth transition
+  // Note: We overwrite className to prevent multiple color classes from clashing
+  uvCard.className = `w-[280px] h-[280px] mx-auto my-[30px] rounded-[40px] text-white text-center flex flex-col justify-center items-center transition-all duration-500 ${config.color}`;
+  uvCard.style.boxShadow = `0 15px 35px ${config.shadow}`;
 }
 
-function saveUVDataToStorage({ uv, location }) {
-  localStorage.setItem(
-    "uvData",
-    JSON.stringify({
-      uv,
-      location,
-      updatedAt: Date.now(),
-    })
+/**
+* Main handler to trigger location request and update the dashboard
+*/
+async function handleUpdateUV() {
+  const btn = document.getElementById('getUVBtn');
+  if (btn) {
+      btn.textContent = "Updating...";
+      btn.disabled = true; // Prevent double clicks
+  }
+
+  if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser");
+      return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+      async (position) => {
+          const { latitude, longitude } = position.coords;
+          const locationName = await getLocationName(latitude, longitude);
+          const uvIndex = await getUVIndex(latitude, longitude);
+
+          // Update UI elements
+          const badge = document.querySelector('.location-badge');
+          if (badge) badge.textContent = `📍 ${locationName}`;
+          
+          updateUVDisplay(uvIndex);
+
+          // Cache data in localStorage for next visit
+          localStorage.setItem("uvData", JSON.stringify({
+              uv: uvIndex,
+              location: locationName,
+              timestamp: Date.now()
+          }));
+
+          if (btn) {
+              btn.textContent = "📍 Get Current UV Index";
+              btn.disabled = false;
+          }
+      },
+      (error) => {
+          console.error('Geolocation Error:', error);
+          if (btn) {
+              btn.textContent = "📍 Get Current UV Index";
+              btn.disabled = false;
+          }
+          alert("Could not access your location. Using default data.");
+      }
   );
 }
 
-
-function getStoredUVData() {
-  try {
-    const raw = localStorage.getItem("uvData");
-    if (!raw) return null;
-
-    const parsed = JSON.parse(raw);
-
-    if (typeof parsed.uv !== "number") return null;
-
-    return parsed;
-  } catch {
-    return null;
-  }
-}
-
-
-function restoreStoredUVData() {
-  const stored = getStoredUVData();
-  if (!stored) return;
-
-  updateUVDisplay(stored.uv);
-
-  const badge = document.querySelector(".location-badge");
-  if (badge && stored.location) {
-    badge.textContent = `📍 ${stored.location}`;
-  }
-
-  showUVElements();
-}
-
-
-// Export for global usage
-window.updateUV = updateUV;
-window.updateUVDisplay = updateUVDisplay;
-window.showUVElements = showUVElements;
-window.showUVError = showUVError;
-window.getUVIndex = getUVIndex;
-
-
+/**
+* Initialize on page load
+*/
 document.addEventListener("DOMContentLoaded", () => {
-  restoreStoredUVData();
+  // 1. Try to restore data from localStorage
+  const cached = localStorage.getItem("uvData");
+  if (cached) {
+      try {
+          const data = JSON.parse(cached);
+          updateUVDisplay(data.uv);
+          const badge = document.querySelector('.location-badge');
+          if (badge) badge.textContent = `📍 ${data.location}`;
+      } catch (e) {
+          console.error("Failed to parse cached UV data");
+      }
+  }
+
+  // 2. Bind click event to the button
+  const getUVBtn = document.getElementById('getUVBtn');
+  if (getUVBtn) {
+      getUVBtn.addEventListener('click', handleUpdateUV);
+  }
 });
