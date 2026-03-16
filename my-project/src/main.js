@@ -7,7 +7,7 @@ import './uv.js'
 import DataService from './dataService.js'; 
 
 /**
- * US3.1: Awareness Data Visualization (Historical Data 1982 - 2025)
+ * US3.1: Awareness Data Visualization
  */
 const initAwarenessCharts = async () => {
     const tempBars = document.getElementById('temp-bars');
@@ -124,6 +124,111 @@ const updateProfilePreview = () => {
 };
 
 /**
+ * Carousel Animation Logic: Fixed 3-Point System with Forced Clean-up
+ */
+const initCarousel = () => {
+  const cards = [
+      document.getElementById('card-left'),
+      document.getElementById('card-center'),
+      document.getElementById('card-right')
+  ];
+  const dots = document.querySelectorAll('.dot');
+  const wrapper = document.getElementById('carousel-wrapper');
+  
+  if (!cards[0] || !cards[1] || !cards[2]) return;
+
+  // Initial layout state: 0=Left, 1=Center, 2=Right
+  let cardPositions = [0, 1, 2]; 
+
+  const updateUI = () => {
+      cards.forEach((card, index) => {
+          const posIndex = cardPositions[index];
+
+          // 1. Remove initial Tailwind classes that conflict with JS dynamic positioning
+          card.classList.remove('left-[90px]', 'right-[90px]', 'left-1/2', '-translate-x-1/2');
+
+          // 2. Use setProperty with !important to ensure JS takes absolute priority
+          card.style.setProperty('position', 'absolute', 'important');
+          card.style.setProperty('right', 'auto', 'important');
+          card.style.setProperty('margin', '0', 'important');
+          card.style.setProperty('transition', 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)', 'important');
+
+          if (posIndex === 1) { 
+              // --- CENTER POSITION ---
+              card.style.setProperty('left', '50%', 'important');
+              card.style.setProperty('transform', 'translateX(-50%) scale(1)', 'important');
+              card.style.setProperty('z-index', '30', 'important');
+              card.style.setProperty('opacity', '1', 'important');
+              card.style.setProperty('filter', 'blur(0px)', 'important');
+              card.style.setProperty('width', '700px', 'important');
+              card.style.setProperty('top', '10px', 'important');
+          } else if (posIndex === 0) { 
+              // --- LEFT POSITION ---
+              card.style.setProperty('left', '0%', 'important');
+              card.style.setProperty('transform', 'translateX(0) scale(0.8)', 'important');
+              card.style.setProperty('z-index', '10', 'important');
+              card.style.setProperty('opacity', '0.4', 'important');
+              card.style.setProperty('filter', 'blur(2px)', 'important');
+              card.style.setProperty('width', '500px', 'important');
+              card.style.setProperty('top', '95px', 'important');
+          } else { 
+              // --- RIGHT POSITION ---
+              card.style.setProperty('left', '100%', 'important');
+              card.style.setProperty('transform', 'translateX(-100%) scale(0.8)', 'important');
+              card.style.setProperty('z-index', '10', 'important');
+              card.style.setProperty('opacity', '0.4', 'important');
+              card.style.setProperty('filter', 'blur(2px)', 'important');
+              card.style.setProperty('width', '500px', 'important');
+              card.style.setProperty('top', '95px', 'important');
+          }
+      });
+
+      // Update dot states based on which card is currently at Position 1 (Center)
+      const activeIdx = cardPositions.indexOf(1);
+      dots.forEach((dot, i) => {
+          dot.style.setProperty('background-color', i === activeIdx ? 'white' : 'rgba(255,255,255,0.4)', 'important');
+          dot.style.setProperty('width', i === activeIdx ? '24px' : '12px', 'important');
+          dot.style.setProperty('transition', 'all 0.3s ease', 'important');
+      });
+  };
+
+  const nextSlide = () => {
+      // Rotation logic: L <- C <- R
+      cardPositions = cardPositions.map(p => (p + 2) % 3);
+      updateUI();
+  };
+
+  const goToSlide = (targetIdx) => {
+      // Keep rotating until target card reaches Center Slot (1)
+      while (cardPositions[targetIdx] !== 1) {
+          cardPositions = cardPositions.map(p => (p + 2) % 3);
+      }
+      updateUI();
+  };
+
+  dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+          goToSlide(i);
+          resetAutoPlay();
+      });
+  });
+
+  let autoTimer = setInterval(nextSlide, 5000);
+
+  const resetAutoPlay = () => {
+      clearInterval(autoTimer);
+      autoTimer = setInterval(nextSlide, 5000);
+  };
+
+  if (wrapper) {
+      wrapper.addEventListener('mouseenter', () => clearInterval(autoTimer));
+      wrapper.addEventListener('mouseleave', () => resetAutoPlay());
+  }
+
+  updateUI();
+};
+
+/**
  * Profile Selection Logic
  */
 const initProfileSelection = () => {
@@ -153,27 +258,21 @@ const initProfileSelection = () => {
 };
 
 /**
- * Global Bridge: Teammate module interceptor (Production Optimized)
+ * Global Bridge: Synchronizes team module with profile preview
  */
 const setupUVInterceptor = () => {
     const originalUpdateDisplay = window.updateUVDisplay;
     
-    // We override the global function so main.js can "hear" when the API finishes
     window.updateUVDisplay = function(uv) {
-        // 1. Run the original team logic (colors/text on Dashboard)
         if (typeof originalUpdateDisplay === 'function') {
             originalUpdateDisplay(uv);
         }
         
-        // 2. Explicitly sync to localStorage for other pages
-        localStorage.setItem("uvData", JSON.stringify({
-            uv: uv,
-            updatedAt: Date.now()
-        }));
+        const existingData = JSON.parse(localStorage.getItem("uvData") || "{}");
+        const newData = { ...existingData, uv: uv, updatedAt: Date.now() };
+        localStorage.setItem("uvData", JSON.stringify(newData));
         
-        // 3. Update personalized calculations immediately
         updateProfilePreview();
-        console.log("Global Sync: UV updated to", uv);
     };
 };
 
@@ -183,15 +282,14 @@ const setupUVInterceptor = () => {
 document.addEventListener('DOMContentLoaded', () => {
     initProfileSelection();
     initAwarenessCharts(); 
+    initCarousel(); 
     
-    // Small delay to ensure uv.js has finished loading its functions into window
     setTimeout(() => {
         setupUVInterceptor();
         updateProfilePreview();
     }, 200);
 });
 
-// Cross-tab sync: Update if user changes data in another tab
 window.addEventListener('storage', (event) => {
     if (event.key === 'uvData' || event.key === 'userSkinType') {
         updateProfilePreview();
