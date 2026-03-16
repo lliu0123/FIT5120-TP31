@@ -56,22 +56,38 @@ const initAwarenessCharts = async () => {
 };
 
 /**
- * US2.2: Personalized UV Protection Algorithm
+ * US2.2: Personalized UV Protection Algorithm (Updated for 6 Skin Types)
+ * Fitzpatrick Scale Multipliers (1 is most sensitive, 6 is least)
  */
 const getPersonalizedSafety = (uvIndex, skinType) => {
-    const sensitivity = { '1': 2.5, '2': 2.0, '3': 1.5, '4': 1.0, '5': 0.7 };
+    const sensitivity = { 
+        '1': 2.5,  // Always burns
+        '2': 2.0,  // Usually burns
+        '3': 1.5,  // Sometimes burns
+        '4': 1.0,  // Rarely burns
+        '5': 0.7,  // Very rarely burns
+        '6': 0.5   // Never burns
+    };
+
     const factor = sensitivity[skinType] || 1.5; 
+    
+    // Standard burn time formula: 200 / (UV Index * Sensitivity Factor)
     const minutes = uvIndex > 0 ? Math.round(200 / (uvIndex * factor)) : 480;
     
     let recommendedSPF = "None";
     if (uvIndex >= 3) {
-        if (skinType <= 2) recommendedSPF = "50+";
-        else if (skinType <= 4) recommendedSPF = "30+";
-        else recommendedSPF = "15+";
+        if (skinType <= 2) {
+            recommendedSPF = "50+";
+        } else if (skinType <= 4) {
+            recommendedSPF = "30+";
+        } else {
+            recommendedSPF = "15+";
+        }
     }
 
     return {
-        timeText: minutes > 120 ? "120+ mins" : `${minutes} mins`,
+        // Cap visual display at 180 mins for UI balance
+        timeText: minutes > 180 ? "180+ mins" : `${minutes} mins`,
         spf: `SPF ${recommendedSPF}`,
         riskPercent: Math.min((uvIndex / 11) * 100, 100)
     };
@@ -124,7 +140,8 @@ const updateProfilePreview = () => {
 };
 
 /**
- * Carousel Animation Logic: Fixed 3-Point System with Forced Clean-up
+ * Carousel Animation Logic: Fixed 3-Point Conveyor System
+ * Forces cleanup of Tailwind classes to prevent alignment issues
  */
 const initCarousel = () => {
   const cards = [
@@ -137,24 +154,23 @@ const initCarousel = () => {
   
   if (!cards[0] || !cards[1] || !cards[2]) return;
 
-  // Initial layout state: 0=Left, 1=Center, 2=Right
   let cardPositions = [0, 1, 2]; 
 
   const updateUI = () => {
       cards.forEach((card, index) => {
           const posIndex = cardPositions[index];
 
-          // 1. Remove initial Tailwind classes that conflict with JS dynamic positioning
+          // Clean up conflicting Tailwind classes
           card.classList.remove('left-[90px]', 'right-[90px]', 'left-1/2', '-translate-x-1/2');
 
-          // 2. Use setProperty with !important to ensure JS takes absolute priority
+          // Force Styles using setProperty
           card.style.setProperty('position', 'absolute', 'important');
           card.style.setProperty('right', 'auto', 'important');
           card.style.setProperty('margin', '0', 'important');
           card.style.setProperty('transition', 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)', 'important');
 
           if (posIndex === 1) { 
-              // --- CENTER POSITION ---
+              // --- CENTER ---
               card.style.setProperty('left', '50%', 'important');
               card.style.setProperty('transform', 'translateX(-50%) scale(1)', 'important');
               card.style.setProperty('z-index', '30', 'important');
@@ -163,7 +179,7 @@ const initCarousel = () => {
               card.style.setProperty('width', '700px', 'important');
               card.style.setProperty('top', '10px', 'important');
           } else if (posIndex === 0) { 
-              // --- LEFT POSITION ---
+              // --- LEFT ---
               card.style.setProperty('left', '0%', 'important');
               card.style.setProperty('transform', 'translateX(0) scale(0.8)', 'important');
               card.style.setProperty('z-index', '10', 'important');
@@ -172,7 +188,7 @@ const initCarousel = () => {
               card.style.setProperty('width', '500px', 'important');
               card.style.setProperty('top', '95px', 'important');
           } else { 
-              // --- RIGHT POSITION ---
+              // --- RIGHT ---
               card.style.setProperty('left', '100%', 'important');
               card.style.setProperty('transform', 'translateX(-100%) scale(0.8)', 'important');
               card.style.setProperty('z-index', '10', 'important');
@@ -183,7 +199,6 @@ const initCarousel = () => {
           }
       });
 
-      // Update dot states based on which card is currently at Position 1 (Center)
       const activeIdx = cardPositions.indexOf(1);
       dots.forEach((dot, i) => {
           dot.style.setProperty('background-color', i === activeIdx ? 'white' : 'rgba(255,255,255,0.4)', 'important');
@@ -193,13 +208,11 @@ const initCarousel = () => {
   };
 
   const nextSlide = () => {
-      // Rotation logic: L <- C <- R
       cardPositions = cardPositions.map(p => (p + 2) % 3);
       updateUI();
   };
 
   const goToSlide = (targetIdx) => {
-      // Keep rotating until target card reaches Center Slot (1)
       while (cardPositions[targetIdx] !== 1) {
           cardPositions = cardPositions.map(p => (p + 2) % 3);
       }
