@@ -5,68 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SunSafe | UV Awareness</title>
     <link rel="stylesheet" href="src/style.css">
+    <link rel="stylesheet" href="src/awarenessBG.css">
 </head>
-<body>
-    
-    <div class="max-w-[1000px] mx-auto mt-20 mb-10 px-5">
+<body class="bg-app">
+    <div class="awareness-bg-container">
+        <div class="awareness-sun-glow"></div>
+    </div>
+
+    <main class="relative z-10 max-w-[1000px] mx-auto mt-28 mb-10 px-5">
         
-        <div class="awareness-hero">
+        <section class="awareness-hero fade-in">
             <div class="hero-icon-box">
-                <span class="icon-shield">🛡️</span>
+                <div class="custom-shield"></div>
             </div>
             <div class="hero-text">
                 <h2>UV Awareness and Skin Cancer Risk</h2>
                 <p>Understanding UV exposure is your first line of defense. Taking practical protective actions daily helps prevent skin cancer, premature ageing, and serious health risks.</p>
             </div>
-        </div>
+        </section>
 
-        <div class="chart-card">
-            <div class="chart-header">
-                <div class="info-icon">ℹ️</div>
-                <div class="header-text">
-                    <h3>Skin Cancer Impact in Australia</h3>
-                    <p>Reported cases by age group</p>
+        <section class="dual-chart-section fade-in delay-1">
+            
+            <div class="chart-card awareness-content-card">
+                <div class="chart-header">
+                    <div class="info-tag" style="background: #ff6b6b;">C</div>
+                    <div class="header-text">
+                        <h3>Australia Temperature Trend</h3>
+                        <p>Mean temperature anomaly (1982 - 2025)</p>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-bars" id="temp-bars"></div>
+                    <div class="chart-x-axis" id="temp-years"></div>
                 </div>
             </div>
 
-            <div class="chart-container">
-                <div class="chart-y-axis">
-                    <span>34000</span>
-                    <span>25500</span>
-                    <span>17000</span>
-                    <span>8500</span>
-                    <span>0</span>
+            <div class="chart-card awareness-content-card">
+                <div class="chart-header">
+                    <div class="info-tag" style="background: #FF8C00;">!</div>
+                    <div class="header-text">
+                        <h3>Melanoma Incidence Rate</h3>
+                        <p>Cases per 100k Australians (1982 - 2025)</p>
+                    </div>
                 </div>
-                <div class="chart-bars">
-                    <div class="bar-group">
-                        <div class="bar" data-height="15%"></div>
-                        <span>18-25</span>
-                    </div>
-                    <div class="bar-group">
-                        <div class="bar" data-height="25%"></div>
-                        <span>26-35</span>
-                    </div>
-                    <div class="bar-group">
-                        <div class="bar" data-height="40%"></div>
-                        <span>36-45</span>
-                    </div>
-                    <div class="bar-group">
-                        <div class="bar" data-height="60%"></div>
-                        <span>46-55</span>
-                    </div>
-                    <div class="bar-group">
-                        <div class="bar" data-height="75%"></div>
-                        <span>56-65</span>
-                    </div>
-                    <div class="bar-group">
-                        <div class="bar" data-height="90%"></div>
-                        <span>66+</span>
-                    </div>
+                <div class="chart-container">
+                    <div class="chart-bars" id="cancer-bars"></div>
+                    <div class="chart-x-axis" id="cancer-years"></div>
                 </div>
             </div>
-        </div>
 
-        <div class="myths-section">
+        </section>
+
+        <section class="myths-section fade-in delay-2">
             <h3 class="section-title">Common UV Myths vs. Facts</h3>
             <div class="cards-grid">
                 
@@ -143,32 +133,9 @@
                 </div>
 
             </div>
-        </div>
-    </div> <script type="module" src="/src/main.js"></script>
+        </section>
+    </main> 
+
+    <script type="module" src="/src/main.js"></script>
 </body>
-</html><div class="chart-bars">
-    <div class="bar-group">
-        <div class="bar" data-height="15%"></div>
-        <span>18-25</span>
-    </div>
-    <div class="bar-group">
-        <div class="bar" data-height="25%"></div>
-        <span>26-35</span>
-    </div>
-    <div class="bar-group">
-        <div class="bar" data-height="40%"></div>
-        <span>36-45</span>
-    </div>
-    <div class="bar-group">
-        <div class="bar" data-height="60%"></div>
-        <span>46-55</span>
-    </div>
-    <div class="bar-group">
-        <div class="bar" data-height="75%"></div>
-        <span>56-65</span>
-    </div>
-    <div class="bar-group">
-        <div class="bar" data-height="90%"></div>
-        <span>66+</span>
-    </div>
-</div>
+</html>

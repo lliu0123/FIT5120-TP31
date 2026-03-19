@@ -1,0 +1,175 @@
+/* --- Awareness Page Specific Styles --- */
+
+/* 1. Main Background Container */
+.awareness-bg-container {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1 !important;
+    background-color: #ffffff !important;
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(255, 150, 0, 0.15) 0px, transparent 50%), 
+        radial-gradient(at 100% 0%, rgba(255, 200, 100, 0.12) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(255, 255, 255, 1) 0px, transparent 50%) !important;
+    overflow: hidden;
+}
+
+/* 2. Grid Overlay */
+.awareness-bg-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(ellipse at center, black, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black, transparent 80%);
+    pointer-events: none;
+}
+
+/* 3. Floating Sun Glow */
+.awareness-sun-glow {
+    position: absolute;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(255, 165, 0, 0.1) 0%, transparent 70%);
+    top: -200px;
+    right: -100px;
+    filter: blur(80px);
+    animation: pulseGlow 15s infinite alternate ease-in-out;
+    pointer-events: none;
+}
+
+@keyframes pulseGlow {
+    0% { transform: scale(1); opacity: 0.4; }
+    100% { transform: scale(1.3); opacity: 0.7; }
+}
+
+/* 4. Glassmorphism Card Style */
+.awareness-content-card {
+    background: rgba(255, 255, 255, 0.6) !important;
+    backdrop-filter: blur(20px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    border-radius: 32px !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05) !important;
+    margin-bottom: 40px; 
+    position: relative;
+    z-index: 10;
+}
+
+/* --- Stacking Layout for Charts --- */
+.dual-chart-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 40px 0;
+}
+
+/* --- Optimized Chart Container (Removed X-Axis) --- */
+.chart-container {
+    padding: 20px 20px 40px 20px; /* Increased bottom padding for visual balance */
+    min-height: 220px; 
+}
+
+.chart-bars {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 180px;
+    gap: 1.5px; 
+    padding-bottom: 2px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.05); /* Clean baseline only */
+    position: relative;
+}
+
+/* REMOVED: .chart-x-axis styles as they are no longer needed */
+.chart-x-axis {
+    display: none !important;
+}
+
+.bar-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.bar {
+    width: 100%;
+    min-width: 3px;
+    border-radius: 2px 2px 0 0;
+    height: 0;
+    transition: height 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+    cursor: crosshair;
+}
+
+/* Chart Colors */
+#temp-bars .bar {
+    background: linear-gradient(to top, #ff6b6b, #ff9a9e) !important;
+}
+
+#cancer-bars .bar {
+    background: linear-gradient(to top, #FF8C00, #ffba08) !important;
+}
+
+/* --- Interactive Tooltip --- */
+.bar:hover {
+    filter: brightness(1.15);
+    z-index: 50;
+}
+
+.bar::after {
+    content: attr(data-value);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translate(-50%, -15px) scale(0.8);
+    background: #1d1d1f;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.bar:hover::after {
+    opacity: 1;
+    transform: translate(-50%, -15px) scale(1);
+}
+
+/* Legend and Icons */
+.chart-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.info-tag {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    color: white;
+    font-weight: 800;
+    font-size: 14px;
+}
+
+/* Flip Cards adjustment */
+.flip-card-front, .flip-card-back {
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
