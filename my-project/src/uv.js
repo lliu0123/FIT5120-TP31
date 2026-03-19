@@ -33,34 +33,65 @@ async function getLocationName(lat, lng) {
 }
 
 async function getUVIndex(lat, lng) {
-  const BASE_URL = window.AppConfig?.OPEN_METEO_BASE_URL || 'https://api.open-meteo.com/v1/forecast';
+  const BASE_URL =
+    window.AppConfig?.OPEN_METEO_BASE_URL ||
+    'https://api.open-meteo.com/v1/forecast';
 
   try {
-    const url = `${BASE_URL}?latitude=${lat}&longitude=${lng}&hourly=uv_index&forecast_days=1`;
+    const url =
+      `${BASE_URL}?latitude=${lat}&longitude=${lng}` +
+      `&current=uv_index` +
+      `&hourly=uv_index` +
+      `&forecast_days=1` +
+      `&timezone=auto`;
+
     const response = await fetch(url);
-    if (!response.ok) throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+    }
 
     const data = await response.json();
-    if (!data.hourly || !data.hourly.uv_index || !data.hourly.time) {
+
+    // 1) First choice: use current UV directly
+    const currentUV = data?.current?.uv_index;
+    if (typeof currentUV === 'number' && !Number.isNaN(currentUV)) {
+      return Number(currentUV.toFixed(1));
+    }
+
+    // 2) Fallback: use hourly UV and find the closest hour
+    const hourlyTimes = data?.hourly?.time;
+    const hourlyUV = data?.hourly?.uv_index;
+
+    if (
+      !Array.isArray(hourlyTimes) ||
+      !Array.isArray(hourlyUV) ||
+      hourlyTimes.length === 0 ||
+      hourlyUV.length === 0
+    ) {
       throw new Error('Invalid API response format');
     }
 
-    const now = new Date();
-    const currentHour = now.getUTCHours();
-    const currentDate = now.toISOString().split('T')[0];
+    const now = Date.now();
+    let closestIndex = 0;
+    let smallestDiff = Infinity;
 
-    const hourlyTimes = data.hourly.time;
-    const hourlyUV = data.hourly.uv_index;
+    for (let i = 0; i < hourlyTimes.length; i++) {
+      const ts = new Date(hourlyTimes[i]).getTime();
+      if (Number.isNaN(ts)) continue;
 
-    const currentTimeString = `${currentDate}T${currentHour.toString().padStart(2, '0')}:00`;
-    const timeIndex = hourlyTimes.findIndex((time) => time.startsWith(currentTimeString));
-
-    if (timeIndex === -1) {
-      const uvIndex = Math.round(hourlyUV[hourlyUV.length - 1]);
-      return uvIndex;
+      const diff = Math.abs(ts - now);
+      if (diff < smallestDiff) {
+        smallestDiff = diff;
+        closestIndex = i;
+      }
     }
 
-    return Math.round(hourlyUV[timeIndex]);
+    const fallbackUV = hourlyUV[closestIndex];
+    if (typeof fallbackUV !== 'number' || Number.isNaN(fallbackUV)) {
+      throw new Error('No valid UV value found');
+    }
+
+    return Number(fallbackUV.toFixed(1));
   } catch (error) {
     console.error('Error fetching UV data:', error);
     showUVError(error.message);
@@ -127,7 +158,7 @@ function updateUVDisplay(uv) {
     textClass = 'text-white';
   }
 
-  uvValueEl.textContent = uv;
+  uvValueEl.textContent = Number(uv).toFixed(1);
   uvStatusEl.textContent = level;
 
   // Remove all possible background classes
