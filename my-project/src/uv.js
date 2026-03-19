@@ -103,13 +103,6 @@ function updateUVDisplay(uv) {
 
   if (!uvValueEl || !uvStatusEl || !uvCard) return;
 
-function updateUVDisplay(uv) {
-  const uvValueEl = document.querySelector('.uv-value');
-  const uvStatusEl = document.querySelector('.uv-status');
-  const uvCard = document.getElementById('uvCard');
-
-  if (!uvValueEl || !uvStatusEl || !uvCard) return;
-
   let config = {
     level: 'LOW',
     bgClass: 'bg-green-500',
@@ -157,7 +150,6 @@ function updateUVDisplay(uv) {
   uvValueEl.textContent = Number(uv).toFixed(1);
   uvStatusEl.textContent = config.level;
 
-
   uvCard.classList.remove(
     'bg-green-500',
     'bg-yellow-400',
@@ -169,9 +161,7 @@ function updateUVDisplay(uv) {
   );
 
   uvCard.classList.add(config.bgClass, config.textClass);
-
   uvCard.style.boxShadow = `0 8px 20px ${config.shadow}`;
-
 
   const descEl = document.querySelector('.uv-description');
   const descriptions = {
@@ -186,26 +176,6 @@ function updateUVDisplay(uv) {
     descEl.textContent = descriptions[config.level] || '';
   }
 }
-  };
-
-  if (uv >= 3 && uv <= 5) {
-      config = { level: 'MODERATE', color: 'bg-yellow-500', shadow: 'rgba(234, 179, 8, 0.3)' };
-  } else if (uv >= 6 && uv <= 7) {
-      config = { level: 'HIGH', color: 'bg-orange-500', shadow: 'rgba(249, 115, 22, 0.3)' };
-  } else if (uv >= 8 && uv <= 10) {
-      config = { level: 'VERY HIGH', color: 'bg-red-500', shadow: 'rgba(239, 68, 68, 0.3)' };
-  } else if (uv >= 11) {
-      config = { level: 'EXTREME', color: 'bg-purple-600', shadow: 'rgba(147, 51, 234, 0.3)' };
-  }
-
-  // Update text content
-  uvValueEl.textContent = uv;
-  uvStatusEl.textContent = config.level;
-
-  // Update CSS classes for smooth transition
-  // Note: We overwrite className to prevent multiple color classes from clashing
-  uvCard.className = `w-[280px] h-[280px] mx-auto my-[30px] rounded-[40px] text-white text-center flex flex-col justify-center items-center transition-all duration-500 ${config.color}`;
-  uvCard.style.boxShadow = `0 15px 35px ${config.shadow}`;
 
 
 /**
